@@ -1,0 +1,1136 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>折线图</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 统计管理 <span class="c-gray en">&gt;</span> 折线图 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="f-14 c-error">特别声明：Highcharts 是一个用纯 JavaScript编写的一个图表库，仅免费提供给个人学习、个人网站，如果在商业项目中使用，请去Highcharts官网网站购买商业授权。或者您也可以选择其他免费的第三方图表插件，例如百度echarts。H-ui.admin不承担任何版权问题。</div>
+	<div class="text-c">
+		<form class="Huiform" method="post" action="/echarts_1" target="_self">
+			<span class="select-box inline">
+				<select class="select" name="exchange" id="exchange" size="1">
+					<option value="binance" <#if 'binance' == exchange> selected </#if>>binance</option>
+					<option value="gate-io" <#if 'gate-io' == exchange> selected </#if>>gate-io</option>
+					<option value="huobipro" <#if 'huobipro' == exchange> selected </#if>>huobipro</option>
+					<option value="hadax" <#if 'hadax' == exchange> selected </#if>>hadax</option>
+				</select>
+			</span>
+			<span class="select-box inline">
+			<select class="select" name="symbol" id="symbol" size="1">
+                <#list tickers?if_exists as ticker>
+                    <#if ticker.coinSymbol == symbol>
+                        <option value="${ticker.coinSymbol}" selected>${ticker.coinSymbol}</option>
+                    <#else>
+                        <option value="${ticker.coinSymbol}">${ticker.coinSymbol}</option>
+                    </#if>
+                </#list>
+        	</select>
+			</span>
+			<span class="select-box inline">
+			<select class="select" name="base" id="base" size="1">
+                <option value="BTC" <#if 'BTC' == base> selected </#if>>BTC</option>
+                <option value="ETH" <#if 'ETH' == base> selected </#if>>ETH</option>
+                <option value="USDT" <#if 'USDT' == base> selected </#if>>USDT</option>
+			</select>
+			</span>
+			<span class="select-box inline">
+			<select class="select" name="period" id="period" size="1">
+				<option value="HOURLY" <#if 'HOURLY' == period> selected </#if>>1h</option>
+				<option value="TWO_HOURLY" <#if 'TWO_HOURLY' == period> selected </#if>>2h</option>
+				<option value="FOUR_HORLY" <#if 'FOUR_HORLY' == period> selected </#if>>4h</option>
+				<option value="SIX_HOURLY" <#if 'SIX_HOURLY' == period> selected </#if>>6h</option>
+				<option value="TWELVE_HOURLY" <#if 'TWELVE_HOURLY' == period> selected </#if>>12h</option>
+				<option value="DAILY" <#if 'DAILY' == period> selected </#if>>1d</option>
+			</select>
+			</span>
+
+			<button type="submit" class="btn btn-success" id="" name="" ><i class="Hui-iconfont">&#xe600;</i> 分析</button>
+
+			<div class="text-c">
+				<span class="select-box inline">
+				<select class="select" name="status" id="status" size="1">
+				<option value="11" <#if '11' == base> selected </#if>>低点</option>
+				<option value="12" <#if '12' == base> selected </#if>>金叉</option>
+				<option value="21" <#if '21' == base> selected </#if>>高点</option>
+				<option value="22" <#if '22' == base> selected </#if>>死叉</option>
+				</select>
+				</span>
+<span class="select-box inline">
+			<select class="select" name="quantType" id="quantType" size="1">
+				<option value="FREE" >自选</option>
+				<option value="BL">保罗</option>
+			</select>
+	</span>
+
+			<button type="button" class="btn btn-success" onclick='{if(confirm("确定要添加吗?")) {addPoint(); }else {}}' ><i class="Hui-iconfont">&#xe600;</i> 添加</button>
+			</div>
+</form>
+	</div>
+	<div id="container" style="min-width:700px;height:400px"></div>
+	<span id="console" style="color:#1e90ff">【dataZoom】</span>
+	<div class="mt-20">
+		<table class="table table-border table-bordered table-bg table-sort" id="point_table">
+			<thead>
+			<tr class="text-c">
+				<th width="70">ID</th>
+				<th width="80">timestamp</th>
+				<th width="200">时间</th>
+				<th width="120">close</th>
+				<th width="100">操作</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr class="text-c">
+				<td>0</td>
+				<td class="text-l">东鹏</td>
+				<td class="text-l">东鹏</td>
+				<td class="text-l">东鹏</td>
+				<td class="f-14 product-brand-manage"><a style="text-decoration:none" onClick="product_brand_edit('品牌编辑','codeing.html','1')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a>
+					<a style="text-decoration:none" class="ml-5" href="javascript:;" onclick='{if(confirm("确定要删除这行数据吗?")) {deleteCurrentRow(this); }else {}}' title="删除">
+						<i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	<div id="vol" style="min-width:700px;height:400px"></div>
+	<div id="macd" style="min-width:700px;height:400px"></div>
+	<div id="kdj" style="min-width:700px;height:400px"></div>
+	<div id="rsi" style="min-width:700px;height:400px"></div>
+	<div id="dmi" style="min-width:700px;height:400px"></div>
+	<div id="vr" style="min-width:700px;height:400px"></div>
+    <div id="sar" style="min-width:700px;height:400px"></div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/echarts/3.4.0/echarts.min.js"></script>
+<script type="text/javascript">
+
+
+function deleteCurrentRow(obj){
+            var tr=obj.parentNode.parentNode;
+            var tbody=tr.parentNode;
+            tbody.removeChild(tr);
+            //只剩行首时删除表格
+            //if(tbody.rows.length==1) {
+            //    tbody.parentNode.removeChild(tbody);
+            //}
+}
+
+function addPoint(){
+		var pointParam = new Object();
+		pointParam.exchange = $("#exchange").val();
+		pointParam.symbol = $("#symbol").val();
+		pointParam.base = $("#base").val();
+		pointParam.period = $("#period").val();
+		pointParam.status = $("#status").val();
+		pointParam.quantType = $("#quantType").val();
+
+		var tb=document.getElementById("point_table");    //获取table对像
+    	var rows=tb.rows;
+    	var timestampArray = new Array();
+		for(var i=2;i<rows.length;i++){    //--循环所有的行
+			var timestamp=rows[i].cells[1].innerHTML
+			timestampArray.push(timestamp);
+		}
+
+		pointParam.timestamp = timestampArray;
+
+       $.ajax({
+            //提交数据的类型 POST GET
+            type:"POST",
+            //提交的网址
+            url:"page/addpoint",
+            contentType : "application/json",
+            //提交的数据
+            data:JSON.stringify(pointParam),//{pointParam:pointParam},
+            //返回数据的格式
+            datatype: "json",//"xml", "html", "script", "json", "jsonp", "text".
+            //在请求之前调用的函数
+            //beforeSend:function(){$("#msg").html("logining");},
+            //成功返回之后调用的函数
+            success:function(data){
+           //$("#msg").html(decodeURI(data));
+           alert("成功添加");
+            }   ,
+            //调用执行后调用的函数
+            //complete: function(XMLHttpRequest, textStatus){
+            //   alert(XMLHttpRequest.responseText);
+            //   alert(textStatus);
+            //    //HideLoading();
+            //},
+            //调用出错执行的函数
+            error: function(){
+                //请求出错处理
+            }
+         });
+  }
+
+
+
+$(function () {
+var myChart = echarts.init(document.querySelector("#container"));
+var upColor = '#00da3c';
+var upBorderColor = '#008F28';
+var downColor = '#ec0000';
+var downBorderColor = '#8A0000';
+
+
+// 数据意义：开盘(open)，收盘(close)，最低(lowest)，最高(highest)
+
+
+var dataArray =[];
+var pointArray =[];
+   //初始化将测试集包含的用例存在数组里面
+   <#if kline??>
+		<#list kline as item>
+			var tArray = new Array();
+			//tArray.push("${item.time}");
+			tArray.push(timetrans("${item.time}"));
+			tArray.push("${item.open?string("0.0###############")}");
+			tArray.push("${item.close?string("0.0###############")}");
+			tArray.push("${item.low?string("0.0###############")}");
+			tArray.push("${item.high?string("0.0###############")}");
+			dataArray.push(tArray);
+		</#list>
+   </#if>
+	<#if low??>
+		<#list low as item>
+			var tArray = new Array();
+			var tPoint = new Object();
+			var coordArray = new Array();
+			//coordArray.push("${item.time}");
+			coordArray.push(timetrans("${item.time}"));
+			coordArray.push("${item.close?string("0.0###############")}");
+			tPoint.coord = coordArray;
+			tPoint.value = "${item.close?string("0.0###############")}";
+			tPoint.text ="低";
+			pointArray.push(tPoint);
+		</#list>
+   </#if>
+   <#if high??>
+		<#list high as item>
+			var tArray = new Array();
+			var tPoint = new Object();
+			var coordArray = new Array();
+			//coordArray.push("${item.time}");
+			coordArray.push(timetrans("${item.time}"));
+			coordArray.push("${item.close?string("0.0###############")}");
+			tPoint.coord = coordArray;
+			tPoint.value = "${item.close?string("0.0###############")}";
+			tPoint.text ="高";
+
+			var tItemStyle = new Object();
+			var tNormal = new Object();
+			//tNormal.color = 'rgb(41,60,85)';
+			tNormal.color = '#FF6347';
+
+			tItemStyle.normal = tNormal;
+			tPoint.itemStyle = tItemStyle;
+			pointArray.push(tPoint);
+		</#list>
+   </#if>
+   <#if stopLimit??>
+		<#list stopLimit as item>
+			var tArray = new Array();
+			var tPoint = new Object();
+			var coordArray = new Array();
+			//coordArray.push("${item.time}");
+			coordArray.push(timetrans("${item.time}"));
+			coordArray.push("${item.close?string("0.0###############")}");
+			tPoint.coord = coordArray;
+			tPoint.value = "${item.close?string("0.0###############")}";
+			tPoint.text ="止";
+
+			var tItemStyle = new Object();
+			var tNormal = new Object();
+			tNormal.color = 'rgb(41,60,85)';
+			//tNormal.color = '#FF6347';
+
+			tItemStyle.normal = tNormal;
+			tPoint.itemStyle = tItemStyle;
+			pointArray.push(tPoint);
+		</#list>
+   </#if>
+   <#if retrace??>
+		<#list retrace as item>
+			var tArray = new Array();
+			var tPoint = new Object();
+			var coordArray = new Array();
+			//coordArray.push("${item.time}");
+			coordArray.push(timetrans("${item.time}"));
+			coordArray.push("${item.close?string("0.0###############")}");
+			tPoint.coord = coordArray;
+			tPoint.value = "${item.close?string("0.0###############")}";
+			tPoint.text ="回";
+
+			var tItemStyle = new Object();
+			var tNormal = new Object();
+			tNormal.color = '#FF00FF';
+			tNormal.label ="b";
+
+			tItemStyle.normal = tNormal;
+			tPoint.itemStyle = tItemStyle;
+			pointArray.push(tPoint);
+		</#list>
+   </#if>
+console.log(dataArray.length);
+console.log(pointArray.length);
+var data0 = splitData(dataArray);
+
+var data1 = splitData([
+    ['2013/1/24', 2320.26,2320.26,2287.3,2362.94],
+    ['2013/1/25', 2300,2291.3,2288.26,2308.38],
+    ['2013/1/28', 2295.35,2346.5,2295.35,2346.92],
+    ['2013/1/29', 2347.22,2358.98,2337.35,2363.8],
+    ['2013/1/30', 2360.75,2382.48,2347.89,2383.76],
+    ['2013/1/31', 2383.43,2385.42,2371.23,2391.82],
+    ['2013/2/1', 2377.41,2419.02,2369.57,2421.15],
+    ['2013/2/4', 2425.92,2428.15,2417.58,2440.38],
+    ['2013/2/5', 2411,2433.13,2403.3,2437.42],
+    ['2013/2/6', 2432.68,2434.48,2427.7,2441.73],
+    ['2013/2/7', 2430.69,2418.53,2394.22,2433.89],
+    ['2013/2/8', 2416.62,2432.4,2414.4,2443.03],
+    ['2013/2/18', 2441.91,2421.56,2415.43,2444.8],
+    ['2013/2/19', 2420.26,2382.91,2373.53,2427.07],
+    ['2013/2/20', 2383.49,2397.18,2370.61,2397.94],
+    ['2013/2/21', 2378.82,2325.95,2309.17,2378.82],
+    ['2013/2/22', 2322.94,2314.16,2308.76,2330.88],
+    ['2013/2/25', 2320.62,2325.82,2315.01,2338.78],
+    ['2013/2/26', 2313.74,2293.34,2289.89,2340.71],
+    ['2013/2/27', 2297.77,2313.22,2292.03,2324.63],
+    ['2013/2/28', 2322.32,2365.59,2308.92,2366.16],
+    ['2013/3/1', 2364.54,2359.51,2330.86,2369.65],
+    ['2013/3/4', 2332.08,2273.4,2259.25,2333.54],
+    ['2013/3/5', 2274.81,2326.31,2270.1,2328.14],
+    ['2013/3/6', 2333.61,2347.18,2321.6,2351.44],
+    ['2013/3/7', 2340.44,2324.29,2304.27,2352.02],
+    ['2013/3/8', 2326.42,2318.61,2314.59,2333.67],
+    ['2013/3/11', 2314.68,2310.59,2296.58,2320.96],
+    ['2013/3/12', 2309.16,2286.6,2264.83,2333.29],
+    ['2013/3/13', 2282.17,2263.97,2253.25,2286.33],
+    ['2013/3/14', 2255.77,2270.28,2253.31,2276.22],
+    ['2013/3/15', 2269.31,2278.4,2250,2312.08],
+    ['2013/3/18', 2267.29,2240.02,2239.21,2276.05],
+    ['2013/3/19', 2244.26,2257.43,2232.02,2261.31],
+    ['2013/3/20', 2257.74,2317.37,2257.42,2317.86],
+    ['2013/3/21', 2318.21,2324.24,2311.6,2330.81],
+    ['2013/3/22', 2321.4,2328.28,2314.97,2332],
+    ['2013/3/25', 2334.74,2326.72,2319.91,2344.89],
+    ['2013/3/26', 2318.58,2297.67,2281.12,2319.99],
+    ['2013/3/27', 2299.38,2301.26,2289,2323.48],
+    ['2013/3/28', 2273.55,2236.3,2232.91,2273.55],
+    ['2013/3/29', 2238.49,2236.62,2228.81,2246.87],
+    ['2013/4/1', 2229.46,2234.4,2227.31,2243.95],
+    ['2013/4/2', 2234.9,2227.74,2220.44,2253.42],
+    ['2013/4/3', 2232.69,2225.29,2217.25,2241.34],
+    ['2013/4/8', 2196.24,2211.59,2180.67,2212.59],
+    ['2013/4/9', 2215.47,2225.77,2215.47,2234.73],
+    ['2013/4/10', 2224.93,2226.13,2212.56,2233.04],
+    ['2013/4/11', 2236.98,2219.55,2217.26,2242.48],
+    ['2013/4/12', 2218.09,2206.78,2204.44,2226.26],
+    ['2013/4/15', 2199.91,2181.94,2177.39,2204.99],
+    ['2013/4/16', 2169.63,2194.85,2165.78,2196.43],
+    ['2013/4/17', 2195.03,2193.8,2178.47,2197.51],
+    ['2013/4/18', 2181.82,2197.6,2175.44,2206.03],
+    ['2013/4/19', 2201.12,2244.64,2200.58,2250.11],
+    ['2013/4/22', 2236.4,2242.17,2232.26,2245.12],
+    ['2013/4/23', 2242.62,2184.54,2182.81,2242.62],
+    ['2013/4/24', 2187.35,2218.32,2184.11,2226.12],
+    ['2013/4/25', 2213.19,2199.31,2191.85,2224.63],
+    ['2013/4/26', 2203.89,2177.91,2173.86,2210.58],
+    ['2013/5/2', 2170.78,2174.12,2161.14,2179.65],
+    ['2013/5/3', 2179.05,2205.5,2179.05,2222.81],
+    ['2013/5/6', 2212.5,2231.17,2212.5,2236.07],
+    ['2013/5/7', 2227.86,2235.57,2219.44,2240.26],
+    ['2013/5/8', 2242.39,2246.3,2235.42,2255.21],
+    ['2013/5/9', 2246.96,2232.97,2221.38,2247.86],
+    ['2013/5/10', 2228.82,2246.83,2225.81,2247.67],
+    ['2013/5/13', 2247.68,2241.92,2231.36,2250.85],
+    ['2013/5/14', 2238.9,2217.01,2205.87,2239.93],
+    ['2013/5/15', 2217.09,2224.8,2213.58,2225.19],
+    ['2013/5/16', 2221.34,2251.81,2210.77,2252.87],
+    ['2013/5/17', 2249.81,2282.87,2248.41,2288.09],
+    ['2013/5/20', 2286.33,2299.99,2281.9,2309.39],
+    ['2013/5/21', 2297.11,2305.11,2290.12,2305.3],
+    ['2013/5/22', 2303.75,2302.4,2292.43,2314.18],
+    ['2013/5/23', 2293.81,2275.67,2274.1,2304.95],
+    ['2013/5/24', 2281.45,2288.53,2270.25,2292.59],
+    ['2013/5/27', 2286.66,2293.08,2283.94,2301.7],
+    ['2013/5/28', 2293.4,2321.32,2281.47,2322.1],
+    ['2013/5/29', 2323.54,2324.02,2321.17,2334.33],
+    ['2013/5/30', 2316.25,2317.75,2310.49,2325.72],
+    ['2013/5/31', 2320.74,2300.59,2299.37,2325.53],
+    ['2013/6/3', 2300.21,2299.25,2294.11,2313.43],
+    ['2013/6/4', 2297.1,2272.42,2264.76,2297.1],
+    ['2013/6/5', 2270.71,2270.93,2260.87,2276.86],
+    ['2013/6/6', 2264.43,2242.11,2240.07,2266.69],
+    ['2013/6/7', 2242.26,2210.9,2205.07,2250.63],
+    ['2013/6/13', 2190.1,2148.35,2126.22,2190.1]
+]);
+
+function splitData(rawData) {
+    var categoryData = [];;
+    var values = []
+    for (var i = 0; i < rawData.length; i++) {
+        categoryData.push(rawData[i].splice(0, 1)[0]);
+        values.push(rawData[i]);
+
+    }
+    return {
+        categoryData: categoryData,
+        values: values
+    };
+}
+
+function timetrans(date){
+    var date = new Date(date*1000);//如果date为10位不需要乘1000
+    //var date = new Date(date);//如果date为10位不需要乘1000
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+    var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+    var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+    var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+    var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
+    return Y+M+D+h+m+s;
+}
+
+function toTimestamp(date){
+    var date = new Date(date);
+    return date.getTime();
+}
+
+
+function calculateMA(dayCount) {
+    var result = [];
+    for (var i = 0, len = data0.values.length; i < len; i++) {
+        if (i < dayCount) {
+            result.push('-');
+            continue;
+        }
+        var sum = 0;
+        for (var j = 0; j < dayCount; j++) {
+            sum += parseFloat(data0.values[i - j][1]);
+        }
+        result.push(sum / dayCount);
+    }
+    return result;
+}
+
+function addTableRow(param){
+  var table = document.getElementById("point_table");
+  //var totalRows = table.rows.length - 1;
+  var newIndex = table.rows.length-1; //须去掉表尾2行
+  //var newIndex = 0; //须去掉表尾2行
+  var currentTR = table.rows[newIndex]; //取得当前行
+  var newTR = currentTR.cloneNode(true); //复制当前行
+
+  newTR.childNodes[1].childNodes[0].data = table.rows.length - 1;
+  newTR.childNodes[3].childNodes[0].data = toTimestamp(param.name);
+  newTR.childNodes[5].childNodes[0].data = param.name;
+  newTR.childNodes[7].childNodes[0].data = param.data[2];
+  alert(newTR.innerHTML);
+//var txt = newTR.innerHTML.replace(/(#)(/d+)(#)/gm,"$1"+(newIndex-1)+"$3");
+//alert(txt);
+//newTR.innerHTML = txt;
+//alert(newTR.innerHTML);
+  currentTR.insertAdjacentElement("afterEnd",newTR); //插入复制的行
+  eval("currentTR.on"+event.type+" = null"); //清除当前行的事件处理
+//newTR.childNodes[0].childNodes[0].id = "ticId" + newIndex; //序号
+//newTR.childNodes[1].childNodes[0].id = "testDescription" + newIndex;
+//newTR.childNodes[2].childNodes[0].id = "testSecond" + newIndex;
+//newTR.childNodes[3].childNodes[0].id = "testAccording" + newIndex;
+//newTR.childNodes[4].childNodes[0].id = "testResult" + newIndex;
+}
+
+
+
+option = {
+    title: {
+        text: '上证指数',
+        left: 0
+    },
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross'
+        }
+    },
+    legend: {
+        data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30'],
+        selected:{
+                'MA5': false,
+                'MA10': false,
+                'MA20': false,
+                'MA30': false
+        }
+    },
+    grid: {
+        left: '10%',
+        right: '10%',
+        bottom: '15%'
+    },
+    xAxis: {
+        type: 'category',
+        data: data0.categoryData,
+        scale: true,
+        boundaryGap : false,
+        axisLine: {onZero: false},
+        splitLine: {show: false},
+        splitNumber: 20,
+        min: 'dataMin',
+        max: 'dataMax'
+    },
+    yAxis: {
+        scale: true,
+        splitArea: {
+            show: true
+        }
+    },
+    dataZoom: [
+        {
+            type: 'inside',
+            start: 50,
+            end: 100
+        },
+        {
+            show: true,
+            type: 'slider',
+            y: '90%',
+            start: 50,
+            end: 100
+        }
+    ],
+    series: [
+        {
+            name: '日K',
+            type: 'candlestick',
+            data: data0.values,
+            itemStyle: {
+                normal: {
+                    color: upColor,
+                    color0: downColor,
+                    borderColor: upBorderColor,
+                    borderColor0: downBorderColor
+                }
+            },
+            markPoint: {
+                label: {
+                    normal: {
+                        formatter: function (param) {
+                        	return param.data.text;
+                            //return param != null ? Math.round(param.value) : '';
+                            if (param.color = "#00da3c") {//"#00da3c"
+                            	//return 'sell';
+                            }
+                            if (param.color = 'rgb(41,60,85)') {
+                            	//return 'buy';
+                            }
+                        }
+                    }
+                },
+                data:pointArray,
+                //data: [
+                //    {
+                //        name: 'XX标点',
+                //        coord: ['2013/5/31', 2300],
+                //        value: 2300,
+                //        itemStyle: {
+                //            normal: {color: 'rgb(41,60,85)'}
+                //        }
+                //    },
+                //    {
+                //        name: 'highest value',
+                //        type: 'max',
+                //        valueDim: 'highest'
+                //    },
+                //    {
+                //        name: 'lowest value',
+                //        type: 'min',
+                //        valueDim: 'lowest'
+                //    },
+                //    {
+                //        name: 'average value on close',
+                //        type: 'average',
+                //        valueDim: 'close'
+                //    }
+                //],
+                tooltip: {
+                    formatter: function (param) {
+                        return param.name + '<br>' + (param.data.coord || '');
+                    }
+                }
+            },
+            markLine: {
+                symbol: ['none', 'none'],
+                data: [
+                    [
+                        {
+                            name: 'from lowest to highest',
+                            type: 'min',
+                            valueDim: 'lowest',
+                            symbol: 'circle',
+                            symbolSize: 10,
+                            label: {
+                                normal: {show: false},
+                                emphasis: {show: false}
+                            }
+                        },
+                        {
+                            type: 'max',
+                            valueDim: 'highest',
+                            symbol: 'circle',
+                            symbolSize: 10,
+                            label: {
+                                normal: {show: false},
+                                emphasis: {show: false}
+                            }
+                        }
+                    ],
+                    {
+                        name: 'min line on close',
+                        type: 'min',
+                        valueDim: 'close'
+                    },
+                    {
+                        name: 'max line on close',
+                        type: 'max',
+                        valueDim: 'close'
+                    }
+                ]
+            }
+        },
+        {
+            name: 'MA5',
+            type: 'line',
+            data: calculateMA(5),
+            smooth: true,
+            lineStyle: {
+                normal: {opacity: 0.5}
+            }
+        },
+        {
+            name: 'MA10',
+            type: 'line',
+            data: calculateMA(10),
+            smooth: true,
+            lineStyle: {
+                normal: {opacity: 0.5}
+            }
+        },
+        {
+            name: 'MA20',
+            type: 'line',
+            data: calculateMA(20),
+            smooth: true,
+            lineStyle: {
+                normal: {opacity: 0.5}
+            }
+        },
+        {
+            name: 'MA30',
+            type: 'line',
+            data: calculateMA(30),
+            smooth: true,
+            lineStyle: {
+                normal: {opacity: 0.5}
+            }
+        }
+    ]
+};
+
+myChart.setOption(option);
+//var ecConfig = require('echarts/config');
+function eConsole(param) {
+    var mes = '【' + param.type + '】';
+    if (typeof param.seriesIndex != 'undefined') {
+        mes += '  seriesIndex : ' + param.seriesIndex;
+        mes += '  dataIndex : ' + param.dataIndex;
+    }
+    if (param.type == 'hover') {
+        document.getElementById('hover-console').innerHTML = 'Event Console : ' + mes;
+    }
+    else {
+        document.getElementById('console').innerHTML = mes;
+    }
+    console.log(param);
+    addTableRow(param);
+}
+//myChart.on(ecConfig.EVENT.CLICK, eConsole);
+myChart.on('click', eConsole);
+
+var volTimeArray =[];
+var volFastArray =[];
+var volSlowArray =[];
+   //初始化将测试集包含的用例存在数组里面
+   <#if vol??>
+		<#list vol as item>
+			volTimeArray.push(timetrans("${item.time}"));
+			volFastArray.push("${item.fast?string("#0.0###############")}");
+			volSlowArray.push("${item.slow?string("#0.0###############")}");
+		</#list>
+   </#if>
+volOption = {
+    tooltip : {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : volTimeArray//['周一','周二','周三','周四','周五','周六','周日']
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'ma5',
+            type:'line',
+            stack: '总量',
+            data:volFastArray//[120, 132, 101, 134, 90, 230, 210]
+        },
+        {
+            name:'ma10',
+            type:'line',
+            stack: '总量',
+            data:volSlowArray//[220, 182, 191, 234, 290, 330, 310]
+        }
+    ]
+};
+var volChart = echarts.init(document.querySelector("#vol"));
+volChart.setOption(volOption);
+
+var macdTimeArray =[];
+var macdDifArray =[];
+var macdDeaArray =[];
+var macdBarArray =[];
+   //初始化将测试集包含的用例存在数组里面
+   <#if macd??>
+		<#list macd as item>
+			macdTimeArray.push(timetrans("${item.time}"));
+			macdDifArray.push("${item.dif?string("#0.0###############")}");
+			macdDeaArray.push("${item.dea?string("#0.0###############")}");
+			macdBarArray.push("${item.bar?string("#0.0###############")}");
+		</#list>
+   </#if>
+macdOption = {
+    tooltip : {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : macdTimeArray//['周一','周二','周三','周四','周五','周六','周日']
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'dif',
+            type:'line',
+            stack: '总量',
+            data:macdDifArray//[120, 132, 101, 134, 90, 230, 210]
+        },
+        {
+            name:'dea',
+            type:'line',
+            stack: '总量',
+            data:macdDeaArray//[220, 182, 191, 234, 290, 330, 310]
+        },
+        {
+            name:'bar',
+            type:'line',
+            stack: '总量',
+            data:macdBarArray//[150, 232, 201, 154, 190, 330, 410]
+        }
+    ]
+};
+var macdChart = echarts.init(document.querySelector("#macd"));
+macdChart.setOption(macdOption);
+
+var kdjTimeArray =[];
+var kdjKArray =[];
+var kdjDArray =[];
+var kdjJArray =[];
+   //初始化将测试集包含的用例存在数组里面
+   <#if kdj??>
+		<#list kdj as item>
+			kdjTimeArray.push(timetrans("${item.time}"));
+			kdjKArray.push("${item.k?string("#0.0###############")}");
+			kdjDArray.push("${item.d?string("#0.0###############")}");
+			kdjJArray.push("${item.j?string("#0.0###############")}");
+		</#list>
+   </#if>
+kdjOption = {
+    tooltip : {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : kdjTimeArray//['周一','周二','周三','周四','周五','周六','周日']
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'k',
+            type:'line',
+            stack: '总量',
+            data:kdjKArray//[120, 132, 101, 134, 90, 230, 210]
+        },
+        {
+            name:'d',
+            type:'line',
+            stack: '总量',
+            data:kdjDArray//[220, 182, 191, 234, 290, 330, 310]
+        },
+        {
+            name:'j',
+            type:'line',
+            stack: '总量',
+            data:kdjJArray//[150, 232, 201, 154, 190, 330, 410]
+        }
+    ]
+};
+var kdjChart = echarts.init(document.querySelector("#kdj"));
+kdjChart.setOption(kdjOption);
+
+var rsiTimeArray =[];
+var rsiRArray =[];
+var rsiSArray =[];
+var rsiIArray =[];
+   //初始化将测试集包含的用例存在数组里面
+   <#if rsi??>
+		<#list rsi as item>
+			rsiTimeArray.push(timetrans("${item.time}"));
+			rsiRArray.push("${item.rsi1?string("#0.0###############")}");
+			rsiSArray.push("${item.rsi2?string("#0.0###############")}");
+			rsiIArray.push("${item.rsi3?string("#0.0###############")}");
+		</#list>
+   </#if>
+rsiOption = {
+    tooltip : {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : rsiTimeArray//['周一','周二','周三','周四','周五','周六','周日']
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'RSI1',
+            type:'line',
+            stack: '总量',
+            data:rsiRArray//[120, 132, 101, 134, 90, 230, 210]
+        },
+        {
+            name:'RSI2',
+            type:'line',
+            stack: '总量',
+            data:rsiSArray//[220, 182, 191, 234, 290, 330, 310]
+        },
+        {
+            name:'RSI3',
+            type:'line',
+            stack: '总量',
+            data:rsiIArray//[150, 232, 201, 154, 190, 330, 410]
+        }
+    ]
+};
+var rsiChart = echarts.init(document.querySelector("#rsi"));
+rsiChart.setOption(rsiOption);
+
+
+var dmiTimeArray =[];
+var dmiPdiArray =[];
+var dmiMdiArray =[];
+var dmiAdxArray =[];
+var dmiAdxrArray =[];
+   //初始化将测试集包含的用例存在数组里面
+   <#if dmi??>
+		<#list dmi as item>
+			dmiTimeArray.push(timetrans("${item.time}"));
+			dmiPdiArray.push("${item.pdi?string("#0.0###############")}");
+			dmiMdiArray.push("${item.mdi?string("#0.0###############")}");
+			dmiAdxArray.push("${item.adx?string("#0.0###############")}");
+			dmiAdxrArray.push("${item.adxr?string("#0.0###############")}");
+		</#list>
+   </#if>
+dmiOption = {
+    tooltip : {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : dmiTimeArray//['周一','周二','周三','周四','周五','周六','周日']
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'PDI',
+            type:'line',
+            stack: '总量',
+            data:dmiPdiArray//[120, 132, 101, 134, 90, 230, 210]
+        },
+        {
+            name:'MDI',
+            type:'line',
+            stack: '总量',
+            data:dmiMdiArray//[220, 182, 191, 234, 290, 330, 310]
+        },
+        {
+            name:'ADX',
+            type:'line',
+            stack: '总量',
+            data:dmiAdxArray//[150, 232, 201, 154, 190, 330, 410]
+        },
+        {
+            name:'ADXR',
+            type:'line',
+            stack: '总量',
+            data:dmiAdxrArray//[150, 232, 201, 154, 190, 330, 410]
+        }
+    ]
+};
+var dmiChart = echarts.init(document.querySelector("#dmi"));
+dmiChart.setOption(dmiOption);
+
+var vrTimeArray =[];
+var vrVrArray =[];
+var vrMavrArray =[];
+   //初始化将测试集包含的用例存在数组里面
+   <#if vr??>
+		<#list vr as item>
+			vrTimeArray.push(timetrans("${item.time}"));
+			vrVrArray.push("${item.vr?string("#0.0###############")}");
+			vrMavrArray.push("${item.mavr?string("#0.0###############")}");
+		</#list>
+   </#if>
+vrOption = {
+    tooltip : {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : vrTimeArray
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'VR',
+            type:'line',
+            stack: '总量',
+            data:vrVrArray
+        },
+        {
+            name:'MAVR',
+            type:'line',
+            stack: '总量',
+            data:vrMavrArray
+        }
+    ]
+};
+var vrChart = echarts.init(document.querySelector("#vr"));
+vrChart.setOption(vrOption);
+
+var sarTimeArray =[];
+var sarSarArray =[];
+   //初始化将测试集包含的用例存在数组里面
+   <#if sar??>
+		<#list sar as item>
+			sarTimeArray.push(timetrans("${item.time}"));
+			sarSarArray.push("${item.sar?string("#0.0###############")}");
+		</#list>
+   </#if>
+sarOption = {
+    tooltip : {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : sarTimeArray
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'SAR',
+            type:'line',
+            stack: '总量',
+            data:sarSarArray
+        }
+    ]
+};
+var sarChart = echarts.init(document.querySelector("#sar"));
+sarChart.setOption(sarOption);
+
+});
+</script>
+</body>
+</html>

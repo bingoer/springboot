@@ -1,0 +1,160 @@
+#====切换注解1
+server:
+  port: 80
+#server:
+#  port: 443
+#  http:
+#    port: 80
+#  ssl:
+#    enabled: true
+#    key-store: /home/release/config/www.natiac.cn.jks
+#    key-store-password: q8iqstjqf4
+#    keyStoreType: JKS
+#    keyAlias: www.natiac.cn
+spring:
+  application:
+    name: admin-managee
+  datasource:
+#====切换注解2
+    url: jdbc:mysql://sh-cdb-em02za3l.sql.tencentcdb.com:63347/quota?characterEncoding=utf8&useSSL=true
+#    url: jdbc:mysql://172.17.0.7:3306/quota?useUnicode=true&amp;characterEncoding=UTF-8
+    username: root
+    password: Z!65348031
+#    password: BBBBBDJJNii21z
+    driver_class_name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    #指定连接池中最大的活跃连接数.
+    max-active: 200
+    initial-size: 1
+    #指定必须保持连接的最小值
+    min-idle: 3
+    #指定连接池等待连接返回的最大等待时间，毫秒单位.
+    max-wait: 60000
+    #空闲连接回收的时间间隔，与test-while-idle一起使用，设置5分钟
+    time-between-eviction-runs-millis: 60000
+    #连接池空闲连接的有效时间 ，设置30分钟
+    min-evictable-idle-time-millis: 300000
+    #验证连接的有效性
+    test-while-idle: true
+    #获取连接时候验证，会影响性能
+    test-on-borrow: false
+    #在连接归还到连接池时是否测试该连接
+    test-on-return: false
+    poolPreparedStatements: true
+    #<!-- 超过时间限制是否回收 -->
+    removeAbandoned: true
+    #<!-- 超时时间；单位为秒。180秒=3分钟 -->
+    removeAbandonedTimeout: 180
+    #<!-- 关闭abanded连接时输出错误日志 -->
+    logAbandoned: true
+
+  freemarker:
+    request-context-attribute: request  #req访问request
+    suffix: .html  #后缀名
+    content-type: text/html
+    enabled: true
+    cache: false #缓存配置
+    template-loader-path: classpath:/page/ #模板加载路径 按需配置
+    charset: UTF-8 #编码格式
+    settings:
+      number_format: '0.##'   #数字格式化，无小数点
+
+  schedule:
+    test: 0/2 * * * * ?
+    test2: 0/3 * * * * ?
+    binance:
+      price: 0 0/1 * * * ?
+      macd:
+        1h: 0 0/3 * * * ?
+        4h: 0 0/5 * * * ?
+        1d: 0 0/10 * * * ?
+      change:
+        30m: 0 0/15 * * * ?
+        5m: 0 0/5 * * * ?
+    bittrex:
+      price: 0 0/1 * * * ?
+      macd:
+        1h: 0 0/3 * * * ?
+        4h: 0 0/5 * * * ?
+        1d: 0 0/10 * * * ?
+      change:
+        1h: 0 0/30 * * * ?
+
+#====切换注解3
+#日志
+#logging:
+#  config: /home/release/config/logback-hundraku.xml
+
+debug: true
+
+#自定义的全局变量
+self:
+  exchange:
+    binance: binance
+    bittrex: bittrex
+    gate: gate
+    okex: okex
+    huobipro: huobipro
+    bitfinex: bitfinex
+    upbit: upbit
+    bithumb: bithumb
+    hitbtc: hitbtc
+    gdax: gdax
+    kraken: kraken
+    bitstamp: bitstamp
+    bitz: bitz
+    bitbank: bitbank
+    bitflyer: bitflyer
+    zaif: zaif
+    quoine: quoine
+    btcbox: btcbox
+    fisco: fisco
+    lbank: lbank
+    poloniex: poloniex
+    coinone: coinone
+    syex: syex
+    rightbtc: rightbtc
+    hadax: hadax
+    bibox: bibox
+    simex: simex
+    itbit: itbit
+    wex: wex
+    allcoin: allcoin
+    kucoin: kucoin
+    coinegg: coinegg
+    exrates: exrates
+    gemini: gemini
+    coincheck: coincheck
+    zb: zb
+    liqui: liqui
+    yobit: yobit
+    coinbene: coinbene
+    cryptopia: cryptopia
+    rfinex: rfinex
+    tidex: tidex
+    aex: aex
+    idex: idex
+    bigone: bigone
+    etherflyer: etherflyer
+    ddex: ddex
+    cobinhood: cobinhood
+  #交叉类型
+  type:
+    new: NEW
+    macd: MACD
+    kdj: KDJ
+    #十字星
+    doji: DOJI
+    #波动
+    volatile: VOLATILE
+  #各种系数
+  ratio:
+    #十字星偏差系数值
+    doji: 0.0025
+    changes: 0.015
+    #波动幅度系数值
+    volatile: 0.08
+#  sckey: SCU20744Tcae3e700d2845416dcf4b7d48fefd4fc5a68472d8b5e0
+#  sckey: SCU20845T1c32631f004c33e9aa9333b68b2895065a6aa16731cfa
+

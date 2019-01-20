@@ -1,0 +1,14 @@
+#https解决方案升级nss
+sudo yum upgrade nss
+
+5、脚本切换
+tomcat 的 webapps 都已经指定到网站的根目录/yjdata/www/www
+默认站点采用 tomcat7+jdk1.7。镜像中已经带有默认站点切换版本的脚本。
+/yjdata/www/change_tomcat_version.sh 为切换 tomcat 版本的脚本
+/yjdata/www/change_jdk_version.sh 为切换 jdk 版本的脚本
+输入命令 /yjdata/www/change_tomcat_version.sh 8 表示将 tomcat 版本切换到 8
+输入命令 /yjdata/www/change_jdk_version.sh 1.8 表示将 jdk 版本切换到 1.8
+Jdk 可选的版本有(1.6|1.7|1.8) tomcat 可选择的版本有(6|7|8)
+注意：当 jdk 为 1.6 时 tomcat 不能为 8。
+
+yum install java-1.8.0-openjdk* -y  //然后选择需要的开始安装，我这安装的是1.8运行环境

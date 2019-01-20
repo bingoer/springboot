@@ -1,0 +1,294 @@
+﻿<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico" >
+<link rel="Shortcut Icon" href="/favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<!--/meta 作为公共模版分离出去-->
+
+<title>小工具</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+	<span class="c-gray en">&gt;</span>
+	系统管理
+	<span class="c-gray en">&gt;</span>
+	基本设置
+	<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a>
+</nav>
+<div class="page-container">
+	<form class="form form-horizontal" id="form-article-add">
+		<div id="tab-system" class="HuiTab">
+			<div class="tabBar cl">
+				<span>斐波那契回调计算</span>
+				<span>分批建仓</span>
+				<span>邮件设置</span>
+				<span>其他设置</span>
+			</div>
+			<div class="tabCon">
+				<div class="row cl">
+					<label class="form-label col-xs-2 col-sm-2">
+						<span class="c-red">*</span>
+						第一支撑：</label>
+					<select class="form-label col-xs-2 col-sm-1"size="1" id="first_position">
+						<option value="0" >0%</option>
+						<option value="23.6" selected>23.6%</option>
+						<option value="38.2" >38.2%</option>
+						<option value="50" >50%</option>
+						<option value="61.8" >61.8%</option>
+						<option value="78.6" >78.6%</option>
+						<option value="100" >100%</option>
+					</select>
+					<div class="formControls col-xs-5 col-sm-5">
+						<input type="text" id="first_price" placeholder="输入第一支撑位" value="0.38" class="input-text">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-2 col-sm-2">
+						<span class="c-red">*</span>
+						第二支撑：</label>
+					<select class="form-label col-xs-2 col-sm-1" size="1" id="second_position">
+						<option value="0" selected>0%</option>
+						<option value="23.6" >23.6%</option>
+						<option value="38.2" >38.2%</option>
+						<option value="50" >50%</option>
+						<option value="61.8" >61.8%</option>
+						<option value="78.6" >78.6%</option>
+						<option value="100" >100%</option>
+					</select>
+					<div class="formControls col-xs-5 col-sm-5">
+						<input type="text" id="second_price" placeholder="输入第二支撑位" value="0.26" class="input-text">
+					</div>
+				</div>
+				<div class="row cl">
+					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+						<button  class="btn btn-primary radius" type="button" id="fibonacci"><i class="Hui-iconfont">&#xe632;</i> 计算</button>
+						<button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;清空&nbsp;&nbsp;</button>
+					</div>
+				</div>
+				<div class="row cl">
+				<table class="table table-border table-bordered table-bg table-hover table-sort">
+					<thead>
+					<tr class="text-c">
+						<th width="40"><input name="" type="checkbox" value=""></th>
+						<th width="80">回调位</th>
+						<th>价格</th>
+						<th width="150">相对涨幅</th>
+						<th width="150">更新时间</th>
+						<th width="60">发布状态</th>
+						<th width="100">操作</th>
+					</tr>
+					</thead>
+					<tbody id="resistance">
+					<tr class="text-c">
+						<td><input name="" type="checkbox" value=""></td>
+						<td>100%</td>
+						<td class="text-l"><a class="maincolor" href="javascript:;" onClick="picture_edit('图库编辑','picture-show.html','10001')">0.00054</a></td>
+						<td class="text-c">标签</td>
+						<td>2014-6-11 11:11:42</td>
+						<td class="td-status"><span class="label label-success radius">已发布</span></td>
+						<td class="td-manage"><a style="text-decoration:none" onClick="picture_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> <a style="text-decoration:none" class="ml-5" onClick="picture_edit('图库编辑','picture-add.html','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a style="text-decoration:none" class="ml-5" onClick="picture_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+					</tr>
+					<tr class="text-c">
+						<td><input name="" type="checkbox" value=""></td>
+						<td>78.6%</td>
+						<td class="text-l"><a class="maincolor" href="javascript:;" onClick="picture_edit('图库编辑','picture-show.html','10001')">0.00054</a></td>
+						<td class="text-c">标签</td>
+						<td>2014-6-11 11:11:42</td>
+						<td class="td-status"><span class="label label-success radius">已发布</span></td>
+						<td class="td-manage"><a style="text-decoration:none" onClick="picture_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> <a style="text-decoration:none" class="ml-5" onClick="picture_edit('图库编辑','picture-add.html','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a style="text-decoration:none" class="ml-5" onClick="picture_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+					</tr>
+					<tr class="text-c">
+						<td><input name="" type="checkbox" value=""></td>
+						<td>61.8%</td>
+						<td class="text-l"><a class="maincolor" href="javascript:;" onClick="picture_edit('图库编辑','picture-show.html','10001')">0.00054</a></td>
+						<td class="text-c">标签</td>
+						<td>2014-6-11 11:11:42</td>
+						<td class="td-status"><span class="label label-success radius">已发布</span></td>
+						<td class="td-manage"><a style="text-decoration:none" onClick="picture_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> <a style="text-decoration:none" class="ml-5" onClick="picture_edit('图库编辑','picture-add.html','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a style="text-decoration:none" class="ml-5" onClick="picture_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+					</tr>
+					<tr class="text-c">
+						<td><input name="" type="checkbox" value=""></td>
+						<td>50.0%</td>
+						<td class="text-l"><a class="maincolor" href="javascript:;" onClick="picture_edit('图库编辑','picture-show.html','10001')">0.00054</a></td>
+						<td class="text-c">标签</td>
+						<td>2014-6-11 11:11:42</td>
+						<td class="td-status"><span class="label label-success radius">已发布</span></td>
+						<td class="td-manage"><a style="text-decoration:none" onClick="picture_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> <a style="text-decoration:none" class="ml-5" onClick="picture_edit('图库编辑','picture-add.html','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a style="text-decoration:none" class="ml-5" onClick="picture_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+					</tr>
+					<tr class="text-c">
+						<td><input name="" type="checkbox" value=""></td>
+						<td>38.2%</td>
+						<td class="text-l"><a class="maincolor" href="javascript:;" onClick="picture_edit('图库编辑','picture-show.html','10001')">0.00054</a></td>
+						<td class="text-c">标签</td>
+						<td>2014-6-11 11:11:42</td>
+						<td class="td-status"><span class="label label-success radius">已发布</span></td>
+						<td class="td-manage"><a style="text-decoration:none" onClick="picture_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> <a style="text-decoration:none" class="ml-5" onClick="picture_edit('图库编辑','picture-add.html','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a style="text-decoration:none" class="ml-5" onClick="picture_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+					</tr>
+					<tr class="text-c">
+						<td><input name="" type="checkbox" value=""></td>
+						<td>23.6%</td>
+						<td class="text-l"><a class="maincolor" href="javascript:;" onClick="picture_edit('图库编辑','picture-show.html','10001')">0.00054</a></td>
+						<td class="text-c">标签</td>
+						<td>2014-6-11 11:11:42</td>
+						<td class="td-status"><span class="label label-success radius">已发布</span></td>
+						<td class="td-manage"><a style="text-decoration:none" onClick="picture_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> <a style="text-decoration:none" class="ml-5" onClick="picture_edit('图库编辑','picture-add.html','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a style="text-decoration:none" class="ml-5" onClick="picture_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+					</tr>
+					<tr class="text-c">
+						<td><input name="" type="checkbox" value=""></td>
+						<td>0%</td>
+						<td class="text-l"><a class="maincolor" href="javascript:;" onClick="picture_edit('图库编辑','picture-show.html','10001')">0.00054</a></td>
+						<td class="text-c">标签</td>
+						<td>2014-6-11 11:11:42</td>
+						<td class="td-status"><span class="label label-success radius">已发布</span></td>
+						<td class="td-manage"><a style="text-decoration:none" onClick="picture_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> <a style="text-decoration:none" class="ml-5" onClick="picture_edit('图库编辑','picture-add.html','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a style="text-decoration:none" class="ml-5" onClick="picture_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+					</tr>
+					</tbody>
+				</table>
+				</div>
+			</div>
+			<div class="tabCon">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">允许访问后台的IP列表：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<textarea class="textarea" name="" id=""></textarea>
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">后台登录失败最大次数：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" class="input-text" value="5" id="" name="" >
+					</div>
+				</div>
+			</div>
+			<div class="tabCon">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">邮件发送模式：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text"  class="input-text" value="" id="" name="">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">SMTP服务器：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" id="" value="" class="input-text">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">SMTP 端口：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" class="input-text" value="25" id="" name="" >
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">邮箱帐号：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" class="input-text" value="5" id="emailName" name="emailName" >
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">邮箱密码：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="password" id="email-password" value="" class="input-text">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">收件邮箱地址：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" id="email-address" value="" class="input-text">
+					</div>
+				</div>
+			</div>
+			<div class="tabCon">
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+				<button onClick="article_save_submit();" class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+				<button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	$("#tab-system").Huitab({
+		index:0
+	});
+
+	$("#fibonacci").click(function(){
+		//document.getElementById('resistance').rows[0].childNodes[2].innerText = 'aaa';
+		//设置table1,第2个tr的第一个td的值。
+
+		var first_position = parseFloat($("#first_position").val());
+		var first_price = parseFloat($("#first_price").val());
+		var second_position = parseFloat($("#second_position").val());
+		var second_price = parseFloat($("#second_price").val());
+		var dif_position = first_position - second_position;
+		var dif_price = first_price - second_price;
+		var dif_per = dif_price/dif_position;
+
+		var zero_price = second_price - second_position * dif_per;
+
+		$("#resistance tr:eq(0) td:nth-child(3)").html(zero_price + dif_per * 100);
+		$("#resistance tr:eq(1) td:nth-child(3)").html(zero_price + dif_per * 78.6);
+		$("#resistance tr:eq(2) td:nth-child(3)").html(zero_price + dif_per * 61.8);
+		$("#resistance tr:eq(3) td:nth-child(3)").html(zero_price + dif_per * 50);
+		$("#resistance tr:eq(4) td:nth-child(3)").html(zero_price + dif_per * 38.2);
+		$("#resistance tr:eq(5) td:nth-child(3)").html(zero_price + dif_per * 23.6);
+		$("#resistance tr:eq(6) td:nth-child(3)").html(zero_price + dif_per * 0);
+
+		$("#resistance tr:eq(0) td:nth-child(4)").html((zero_price + dif_per * 100)/zero_price*100-100);
+		$("#resistance tr:eq(1) td:nth-child(4)").html((zero_price + dif_per * 78.6)/zero_price*100-100);
+		$("#resistance tr:eq(2) td:nth-child(4)").html((zero_price + dif_per * 61.8)/zero_price*100-100);
+		$("#resistance tr:eq(3) td:nth-child(4)").html((zero_price + dif_per * 50)/zero_price*100-100);
+		$("#resistance tr:eq(4) td:nth-child(4)").html((zero_price + dif_per * 38.2)/zero_price*100-100);
+		$("#resistance tr:eq(5) td:nth-child(4)").html((zero_price + dif_per * 23.6)/zero_price*100-100);
+		$("#resistance tr:eq(6) td:nth-child(4)").html((zero_price + dif_per * 0)/zero_price*100-100);
+
+
+
+	});
+
+});
+
+
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

@@ -1,0 +1,279 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>wang.raye</groupId>
+	<artifactId>springboot</artifactId>
+	<packaging>jar</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>springboot Maven Webapp</name>
+
+	<url>http://maven.apache.org</url>
+	<repositories>
+		<repository>
+			<id>alimaven</id>
+			<name>aliyun maven</name>
+			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+		</repository>
+		<!--<repository>-->
+			<!--<id>goeasy</id>-->
+			<!--<name>goeasy</name>-->
+			<!--<url>http://maven.goeasy.io/content/repositories/releases/</url>-->
+		<!--</repository>-->
+	</repositories>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.4.0.RELEASE</version>
+	</parent>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<entity.target.dir>src/main/java/</entity.target.dir>
+		<dao.resources.dir>src/main/resources/</dao.resources.dir>
+		<skipTests>true</skipTests>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- Springboot -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+		<!-- Springboot 热部署 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<!-- Swagger API文档 -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+
+		<!-- Mybatis -->
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>RELEASE</version>
+		</dependency>
+
+		<!-- 
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>3.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>1.2.3</version>
+		</dependency>-->
+		<!-- druid阿里巴巴数据库连接池 -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>1.0.26</version>
+		</dependency>
+		<!-- MySql数据库驱动 -->
+		<dependency>
+			<groupId> mysql</groupId>
+			<artifactId> mysql-connector-java</artifactId>
+			<version> 5.0.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+
+		<!-- 交易所API插件 -->
+		<dependency>
+			<groupId>com.binance.api</groupId>
+			<artifactId>binance-api-client</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>de.elbatya.cryptocoins</groupId>
+			<artifactId>bittrex-client</artifactId>
+			<version>2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.huobi.api</groupId>
+			<artifactId>huobi</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- 自动生成setter/getter插件 -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.10</version>
+		</dependency>
+
+		<!--quartz-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+
+		<!--引入freemarker依赖-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-freemarker</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.tictactec/ta-lib -->
+		<dependency>
+			<groupId>com.tictactec</groupId>
+			<artifactId>ta-lib</artifactId>
+			<version>0.4.0</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.22</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.taobao</groupId>
+			<artifactId>taobao-sdk-java-auto</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+
+
+		<!--web实时推送-->
+		<dependency>
+			<groupId>io.goeasy</groupId>
+			<artifactId>goeasy-sdk</artifactId>
+			<version>0.3.9</version>
+		</dependency>
+
+
+	</dependencies>
+	<build>
+		<finalName>springboot</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.mybatis.generator</groupId>
+				<artifactId>mybatis-generator-maven-plugin</artifactId>
+				<version>1.3.5</version>
+				<dependencies>
+					<!--数据库驱动 -->
+					<dependency>
+						<groupId> mysql</groupId>
+						<artifactId> mysql-connector-java</artifactId>
+						<version>5.0.7</version>
+					</dependency>
+					<dependency>
+						<groupId>org.mybatis</groupId>
+						<artifactId>mybatis-spring</artifactId>
+						<version>1.2.2</version>
+					</dependency>
+
+					<dependency>
+						<groupId>org.mybatis</groupId>
+						<artifactId>mybatis</artifactId>
+						<version>3.2.4</version>
+					</dependency>
+
+
+				</dependencies>
+				<executions>
+					<execution>
+						<id>Generate MyBatis Artifacts</id>
+						<phase>package</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!--允许移动生成的文件 -->
+					<verbose>true</verbose>
+					<!-- 是否覆盖 -->
+					<overwrite>true</overwrite>
+					<!-- 自动生成的配置 -->
+					<configurationFile>
+						src/main/resources/mybatis-generator.xml</configurationFile>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<source>1.8</source>
+					<target>1.8</target>
+
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>wang.raye.springboot.ApiApplication</mainClass>
+				</configuration>
+			</plugin>
+		</plugins>
+
+	</build>
+
+</project>
