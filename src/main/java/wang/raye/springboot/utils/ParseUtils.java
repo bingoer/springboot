@@ -16,10 +16,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Component
@@ -450,6 +447,41 @@ public final class ParseUtils {
         return  result;
     }
 
+    /**
+     * 从最新的k线数据中取得价格最低值
+     * @param candlestickList
+     * @param num
+     * @return
+     */
+    public static double getMinLowPriceByLastCandles(List<Kline> candlestickList, int num) {
+        double maxLow = 0.0;
+        if (null!= candlestickList && candlestickList.size() > num ) {
+            List<Double> lastLowList = new ArrayList<>();
+            for (int i = candlestickList.size() - num; i < candlestickList.size(); i++) {
+                lastLowList.add(candlestickList.get(i).getLow());
+            }
+            maxLow = Collections.min(lastLowList);
+        }
+        return maxLow;
+    }
+
+    /**
+     * 从最新的k线数据中取得价格最高值
+     * @param candlestickList
+     * @param num
+     * @return
+     */
+    public static double getMaxHighPriceByLastCandles(List<Kline> candlestickList, int num) {
+        double maxHigh = 0.0;
+        if (null!= candlestickList && candlestickList.size() > num ) {
+            List<Double> lastHighList = new ArrayList<>();
+            for (int i = candlestickList.size() - num; i < candlestickList.size(); i++) {
+                lastHighList.add(candlestickList.get(i).getHigh());
+            }
+            maxHigh = Collections.max(lastHighList);
+        }
+        return maxHigh;
+    }
 
 
 

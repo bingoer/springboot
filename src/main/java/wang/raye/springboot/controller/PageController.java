@@ -195,7 +195,7 @@ public class PageController {
 
     @RequestMapping(value = {"/echarts_1"})
     public String echarts1(ModelMap model, @RequestParam(value = "exchange", required = false, defaultValue = "binance") String exchange,
-                           @RequestParam(value = "symbol", required = false, defaultValue = "DLT") String symbol,
+                           @RequestParam(value = "symbol", required = false, defaultValue = "AST") String symbol,
                            @RequestParam(value = "base", required = false, defaultValue = "BTC") String base,
                            @RequestParam(value = "period", required = false, defaultValue = "TWELVE_HOURLY") String period){
 
@@ -253,6 +253,7 @@ public class PageController {
         model.addAttribute("high", pointListBean.getHighList());
         model.addAttribute("stopLimit", pointListBean.getStopLimitList());
         model.addAttribute("retrace", pointListBean.getRetraceList());
+        model.addAttribute("pointListBean", pointListBean);
         model.addAttribute("vol", volBeanList);
         model.addAttribute("macd", macdBeanList);
 //        model.addAttribute("kdj", kdjList);
@@ -446,8 +447,8 @@ public class PageController {
 
     @RequestMapping(value = {"/cross_list"})
     public String crossAnalysis(ModelMap model, @RequestParam(value = "exchange", required = false, defaultValue = "binance") String exchange,
-                                @RequestParam(value = "status", required = false, defaultValue = "2") String status,
-                                @RequestParam(value = "period", required = false, defaultValue = "TWO_HOURLY") String period){
+                                @RequestParam(value = "status", required = false, defaultValue = "11") String status,
+                                @RequestParam(value = "period", required = false, defaultValue = "TWELVE_HOURLY") String period){
 
         List<AnalysisBean> infolist = new ArrayList<>();
 

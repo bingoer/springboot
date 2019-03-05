@@ -1435,123 +1435,123 @@ public class MacdCrossCriteria {
             return (Criteria) this;
         }
 
-        public Criteria andThrLowIsNull() {
-            addCriterion("thr_low is null");
+        public Criteria andMinLowIsNull() {
+            addCriterion("min_low is null");
             return (Criteria) this;
         }
 
-        public Criteria andThrLowIsNotNull() {
-            addCriterion("thr_low is not null");
+        public Criteria andMinLowIsNotNull() {
+            addCriterion("min_low is not null");
             return (Criteria) this;
         }
 
-        public Criteria andThrLowEqualTo(Double value) {
-            addCriterion("thr_low =", value, "thrLow");
+        public Criteria andMinLowEqualTo(Double value) {
+            addCriterion("min_low =", value, "minLow");
             return (Criteria) this;
         }
 
-        public Criteria andThrLowNotEqualTo(Double value) {
-            addCriterion("thr_low <>", value, "thrLow");
+        public Criteria andMinLowNotEqualTo(Double value) {
+            addCriterion("min_low <>", value, "minLow");
             return (Criteria) this;
         }
 
-        public Criteria andThrLowGreaterThan(Double value) {
-            addCriterion("thr_low >", value, "thrLow");
+        public Criteria andMinLowGreaterThan(Double value) {
+            addCriterion("min_low >", value, "minLow");
             return (Criteria) this;
         }
 
-        public Criteria andThrLowGreaterThanOrEqualTo(Double value) {
-            addCriterion("thr_low >=", value, "thrLow");
+        public Criteria andMinLowGreaterThanOrEqualTo(Double value) {
+            addCriterion("min_low >=", value, "minLow");
             return (Criteria) this;
         }
 
-        public Criteria andThrLowLessThan(Double value) {
-            addCriterion("thr_low <", value, "thrLow");
+        public Criteria andMinLowLessThan(Double value) {
+            addCriterion("min_low <", value, "minLow");
             return (Criteria) this;
         }
 
-        public Criteria andThrLowLessThanOrEqualTo(Double value) {
-            addCriterion("thr_low <=", value, "thrLow");
+        public Criteria andMinLowLessThanOrEqualTo(Double value) {
+            addCriterion("min_low <=", value, "minLow");
             return (Criteria) this;
         }
 
-        public Criteria andThrLowIn(List<Double> values) {
-            addCriterion("thr_low in", values, "thrLow");
+        public Criteria andMinLowIn(List<Double> values) {
+            addCriterion("min_low in", values, "minLow");
             return (Criteria) this;
         }
 
-        public Criteria andThrLowNotIn(List<Double> values) {
-            addCriterion("thr_low not in", values, "thrLow");
+        public Criteria andMinLowNotIn(List<Double> values) {
+            addCriterion("min_low not in", values, "minLow");
             return (Criteria) this;
         }
 
-        public Criteria andThrLowBetween(Double value1, Double value2) {
-            addCriterion("thr_low between", value1, value2, "thrLow");
+        public Criteria andMinLowBetween(Double value1, Double value2) {
+            addCriterion("min_low between", value1, value2, "minLow");
             return (Criteria) this;
         }
 
-        public Criteria andThrLowNotBetween(Double value1, Double value2) {
-            addCriterion("thr_low not between", value1, value2, "thrLow");
+        public Criteria andMinLowNotBetween(Double value1, Double value2) {
+            addCriterion("min_low not between", value1, value2, "minLow");
             return (Criteria) this;
         }
 
-        public Criteria andHighIsNull() {
-            addCriterion("high is null");
+        public Criteria andMaxHighIsNull() {
+            addCriterion("max_high is null");
             return (Criteria) this;
         }
 
-        public Criteria andHighIsNotNull() {
-            addCriterion("high is not null");
+        public Criteria andMaxHighIsNotNull() {
+            addCriterion("max_high is not null");
             return (Criteria) this;
         }
 
-        public Criteria andHighEqualTo(Double value) {
-            addCriterion("high =", value, "high");
+        public Criteria andMaxHighEqualTo(Double value) {
+            addCriterion("max_high =", value, "maxHigh");
             return (Criteria) this;
         }
 
-        public Criteria andHighNotEqualTo(Double value) {
-            addCriterion("high <>", value, "high");
+        public Criteria andMaxHighNotEqualTo(Double value) {
+            addCriterion("max_high <>", value, "maxHigh");
             return (Criteria) this;
         }
 
-        public Criteria andHighGreaterThan(Double value) {
-            addCriterion("high >", value, "high");
+        public Criteria andMaxHighGreaterThan(Double value) {
+            addCriterion("max_high >", value, "maxHigh");
             return (Criteria) this;
         }
 
-        public Criteria andHighGreaterThanOrEqualTo(Double value) {
-            addCriterion("high >=", value, "high");
+        public Criteria andMaxHighGreaterThanOrEqualTo(Double value) {
+            addCriterion("max_high >=", value, "maxHigh");
             return (Criteria) this;
         }
 
-        public Criteria andHighLessThan(Double value) {
-            addCriterion("high <", value, "high");
+        public Criteria andMaxHighLessThan(Double value) {
+            addCriterion("max_high <", value, "maxHigh");
             return (Criteria) this;
         }
 
-        public Criteria andHighLessThanOrEqualTo(Double value) {
-            addCriterion("high <=", value, "high");
+        public Criteria andMaxHighLessThanOrEqualTo(Double value) {
+            addCriterion("max_high <=", value, "maxHigh");
             return (Criteria) this;
         }
 
-        public Criteria andHighIn(List<Double> values) {
-            addCriterion("high in", values, "high");
+        public Criteria andMaxHighIn(List<Double> values) {
+            addCriterion("max_high in", values, "maxHigh");
             return (Criteria) this;
         }
 
-        public Criteria andHighNotIn(List<Double> values) {
-            addCriterion("high not in", values, "high");
+        public Criteria andMaxHighNotIn(List<Double> values) {
+            addCriterion("max_high not in", values, "maxHigh");
             return (Criteria) this;
         }
 
-        public Criteria andHighBetween(Double value1, Double value2) {
-            addCriterion("high between", value1, value2, "high");
+        public Criteria andMaxHighBetween(Double value1, Double value2) {
+            addCriterion("max_high between", value1, value2, "maxHigh");
             return (Criteria) this;
         }
 
-        public Criteria andHighNotBetween(Double value1, Double value2) {
-            addCriterion("high not between", value1, value2, "high");
+        public Criteria andMaxHighNotBetween(Double value1, Double value2) {
+            addCriterion("max_high not between", value1, value2, "maxHigh");
             return (Criteria) this;
         }
 

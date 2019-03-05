@@ -18,8 +18,8 @@ public class CrossQuotaBean {
     private double price;
     private double pricePre;
     private double priceThr;
-    private double highPrice;
-    private double thrLowPrice;
+    private double maxHighPrice;
+    private double minLowPrice;
 
 
 }

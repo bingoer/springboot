@@ -59,13 +59,19 @@ public class AnalysisServerImpl implements AnalysisServer {
     private String SAR="SAR";
 
 	@Override
-	public boolean getLowByRSI(List<AlertSetting> alertSettingList, CrossQuotaBean crossQuotaBean) {
-		boolean result = true;
+	public VolatileBean getLowByRSI(List<AlertSetting> alertSettingList, CrossQuotaBean crossQuotaBean) {
+		VolatileBean volatileBean = new VolatileBean();
+		volatileBean.setType(ConstantUtils.ANALYSIS_TYPE_LOW);
+		volatileBean.setStatus(ConstantUtils.ANALYSIS_STATUS_LOW);
+		double change = crossQuotaBean.getPrice() / crossQuotaBean.getMinLowPrice() - 1;
+		volatileBean.setChange(change);
+//		boolean result = true;
+		volatileBean.setMaxPrice(crossQuotaBean.getMinLowPrice());
 		if (null != alertSettingList && alertSettingList.size() > 0) {
 			RatioBean ratioBean = this.getRatioBean(alertSettingList);
 
 			if (null == ratioBean) {
-				return false;
+				return volatileBean;
 			}
 
 			if (ratioBean.isRsiOpen()) {
@@ -75,7 +81,8 @@ public class AnalysisServerImpl implements AnalysisServer {
 						) {
 //                    isCross = true;
 				} else {
-					result = false;
+//					result = false;
+					volatileBean.setStatus(null);
 				}
 			}
 			if (ratioBean.isKdjOpen()) {
@@ -94,7 +101,8 @@ public class AnalysisServerImpl implements AnalysisServer {
 					kdjFlg = true;
 				}
 				if(!kdjFlg){
-					result = false;
+//					result = false;
+					volatileBean.setStatus(null);
 				}
 			}
 
@@ -103,29 +111,38 @@ public class AnalysisServerImpl implements AnalysisServer {
 					if (crossQuotaBean.getQuotaPreBean().getMaBean().getMa5() < crossQuotaBean.getQuotaPreBean().getMaBean().getMa10()) {
 //                        isCross = true;
 					} else {
-						result = false;
+//						result = false;
+						volatileBean.setStatus(null);
 					}
 				}
 				if (ratioBean.getMa10() == 1) {
 					if (crossQuotaBean.getPricePre() < crossQuotaBean.getQuotaPreBean().getMaBean().getMa10()) {
 //                        isCross = true;
 					} else {
-						result = false;
+//						result = false;
+						volatileBean.setStatus(null);
 					}
 				}
 			}
 		}
-		return result;
+		return volatileBean;
 	}
 
 	@Override
-	public boolean getHighByRSI(List<AlertSetting> alertSettingList, CrossQuotaBean crossQuotaBean) {
-		boolean result = true;
+	public VolatileBean getHighByRSI(List<AlertSetting> alertSettingList, CrossQuotaBean crossQuotaBean) {
+		VolatileBean volatileBean = new VolatileBean();
+		volatileBean.setType(ConstantUtils.ANALYSIS_TYPE_HIGH);
+		volatileBean.setStatus(ConstantUtils.ANALYSIS_STATUS_HIGH);
+		double change = crossQuotaBean.getPrice() / crossQuotaBean.getMaxHighPrice() - 1;
+		volatileBean.setChange(change);
+//		boolean result = true;
+		volatileBean.setMaxPrice(crossQuotaBean.getMaxHighPrice());
 		if (null != alertSettingList && alertSettingList.size() > 0) {
 			RatioBean ratioBean = this.getRatioBean(alertSettingList);
 
 			if (null == ratioBean) {
-				return false;
+				volatileBean.setStatus(null);
+				return volatileBean;
 			}
 
 			if (ratioBean.isRsiOpen()) {
@@ -136,7 +153,8 @@ public class AnalysisServerImpl implements AnalysisServer {
 						) {
 //                    isCross = true;
 				} else {
-					result = false;
+//					result = false;
+					volatileBean.setStatus(null);
 				}
 			}
 
@@ -165,11 +183,12 @@ public class AnalysisServerImpl implements AnalysisServer {
 				}
 			}
 
-			if (result) {
+			if (null != volatileBean.getStatus()) {
 				if (macdFlg || kdjFlg) {
-					result = true;
+//					result = true;
 				} else {
-					result = false;
+//					result = false;
+					volatileBean.setStatus(null);
 				}
 			}
 
@@ -184,17 +203,24 @@ public class AnalysisServerImpl implements AnalysisServer {
 //				}
 //			}
 		}
-		return result;
+		return volatileBean;
 	}
 
 	@Override
-	public boolean getStopLimitByRSI(List<AlertSetting> alertSettingList, CrossQuotaBean crossQuotaBean) {
-		boolean result = false;
+	public VolatileBean getStopLimitByRSI(List<AlertSetting> alertSettingList, CrossQuotaBean crossQuotaBean) {
+		VolatileBean volatileBean = new VolatileBean();
+		volatileBean.setType(ConstantUtils.ANALYSIS_TYPE_STOP);
+//		volatileBean.setStatus(ConstantUtils.ANALYSIS_STATUS_STOP);
+		double change = crossQuotaBean.getPrice() / crossQuotaBean.getMaxHighPrice() - 1;
+		volatileBean.setChange(change);
+//		boolean result = false;
+		volatileBean.setMaxPrice(crossQuotaBean.getMaxHighPrice());
 		if (null != alertSettingList && alertSettingList.size() > 0) {
 			RatioBean ratioBean = this.getRatioBean(alertSettingList);
 
 			if (null == ratioBean) {
-				return false;
+				volatileBean.setStatus(null);
+				return volatileBean;
 			}
 
 			// rsi重新回到低位区间，也就是低于30
@@ -203,7 +229,8 @@ public class AnalysisServerImpl implements AnalysisServer {
 						&& crossQuotaBean.getQuotaPreBean().getRsiBean().getRsi1() < ratioBean.getRsiLow()
 						&& crossQuotaBean.getQuotaThrBean().getRsiBean().getRsi1() > ratioBean.getRsiLow()
 						) {
-					result = true;
+//					result = true;
+					volatileBean.setStatus(ConstantUtils.ANALYSIS_STATUS_STOP);
 				}
 			}
 
@@ -226,13 +253,14 @@ public class AnalysisServerImpl implements AnalysisServer {
 					if (crossQuotaBean.getQuotaPreBean().getRsiBean().getRsi1() > crossQuotaBean.getQuotaBean().getRsiBean().getRsi1()
 							&& crossQuotaBean.getQuotaPreBean().getKdjBean().getJ() > crossQuotaBean.getQuotaBean().getKdjBean().getJ()
 							) {
-						result = true;
+//						result = true;
+						volatileBean.setStatus(ConstantUtils.ANALYSIS_STATUS_STOP);
 					}
 				}
 			}
 
 		}
-		return result;
+		return volatileBean;
 	}
 
 	@Override
@@ -284,14 +312,21 @@ public class AnalysisServerImpl implements AnalysisServer {
 	}
 
 	@Override
-	public String getRetraceByRSI(List<AlertSetting> alertSettingList, CrossQuotaBean crossQuotaBean, String preStatus) {
-		String result = preStatus;
+	public VolatileBean getRetraceByRSI(List<AlertSetting> alertSettingList, CrossQuotaBean crossQuotaBean, String preStatus) {
+
+		VolatileBean volatileBean = new VolatileBean();
+		volatileBean.setType(ConstantUtils.ANALYSIS_TYPE_LOW);
+		volatileBean.setStatus(preStatus);
+		double change = crossQuotaBean.getPrice() / crossQuotaBean.getMinLowPrice() - 1;
+		volatileBean.setChange(change);
+		volatileBean.setMaxPrice(crossQuotaBean.getMinLowPrice());
+//		String result = preStatus;
 
 		if (null != alertSettingList && alertSettingList.size() > 0) {
 			RatioBean ratioBean = this.getRatioBean(alertSettingList);
 
 			if (null == ratioBean) {
-				return result;
+				return volatileBean;
 			}
 
 			if (ratioBean.isRsiOpen()) {
@@ -299,7 +334,8 @@ public class AnalysisServerImpl implements AnalysisServer {
 					boolean rsiFlg = false;
 					boolean kdjFlg = false;
 					if (crossQuotaBean.getQuotaBean().getRsiBean().getRsi1() > ratioBean.getRsiLow()
-							&& crossQuotaBean.getQuotaPreBean().getRsiBean().getRsi1() < ratioBean.getRsiLow()
+							&& crossQuotaBean.getQuotaPreBean().getRsiBean().getRsi1() > ratioBean.getRsiLow()
+							&& crossQuotaBean.getQuotaThrBean().getRsiBean().getRsi1() < ratioBean.getRsiLow()
 							) {
 						rsiFlg = true;
 
@@ -307,46 +343,52 @@ public class AnalysisServerImpl implements AnalysisServer {
 					if (ratioBean.isKdjOpen()) {
 						if (crossQuotaBean.getQuotaBean().getKdjBean().getJ()+1 > crossQuotaBean.getQuotaBean().getKdjBean().getK()
 								&& crossQuotaBean.getQuotaBean().getKdjBean().getK()+1 > crossQuotaBean.getQuotaBean().getKdjBean().getD()
-								&& crossQuotaBean.getQuotaBean().getKdjBean().getJ() < ratioBean.getKdjHigh()
-								&& crossQuotaBean.getQuotaPreBean().getKdjBean().getJ() < crossQuotaBean.getQuotaBean().getKdjBean().getJ()) {
+//								&& crossQuotaBean.getQuotaBean().getKdjBean().getJ() < ratioBean.getKdjHigh()
+//								&& crossQuotaBean.getQuotaPreBean().getKdjBean().getJ() < crossQuotaBean.getQuotaBean().getKdjBean().getJ()
+								) {
 							kdjFlg = true;
 						}
-						if (crossQuotaBean.getQuotaBean().getKdjBean().getJ() > crossQuotaBean.getQuotaPreBean().getKdjBean().getJ()
+						if (crossQuotaBean.getQuotaPreBean().getKdjBean().getJ() > crossQuotaBean.getQuotaThrBean().getKdjBean().getJ()
 								) {
 							kdjFlg = true;
 						}
 					}
 					if(rsiFlg && kdjFlg){
-						result = ConstantUtils.RSI_RETRACE_STATUS_LOW;
+//						result = ConstantUtils.RSI_RETRACE_STATUS_LOW;
+						volatileBean.setStatus(ConstantUtils.RSI_RETRACE_STATUS_LOW);
 					}
 				} else {
 					if (ConstantUtils.RSI_RETRACE_STATUS_LOW.equals(preStatus)) {
-						if (crossQuotaBean.getQuotaBean().getRsiBean().getRsi1() > ratioBean.getRsiMid()
-								&& crossQuotaBean.getQuotaPreBean().getRsiBean().getRsi1() < ratioBean.getRsiMid()
+						if (crossQuotaBean.getQuotaPreBean().getRsiBean().getRsi1() > ratioBean.getRsiMid()
+								&& crossQuotaBean.getQuotaThrBean().getRsiBean().getRsi1() < ratioBean.getRsiMid()
 								) {
-							result = ConstantUtils.RSI_RETRACE_STATUS_UP;
+//							result = ConstantUtils.RSI_RETRACE_STATUS_UP;
+							volatileBean.setStatus(ConstantUtils.RSI_RETRACE_STATUS_UP);
 						}
 					} else {
 						if (ConstantUtils.RSI_RETRACE_STATUS_UP.equals(preStatus)
 								|| ConstantUtils.RSI_RETRACE_STATUS_RETRACE.equals(preStatus)) {
 							if (ratioBean.isKdjOpen()) {
-								if ((crossQuotaBean.getQuotaBean().getRsiBean().getRsi1() < ratioBean.getRsiMid()
-										&& crossQuotaBean.getQuotaPreBean().getRsiBean().getRsi1() > ratioBean.getRsiMid())
-									&& crossQuotaBean.getQuotaBean().getKdjBean().getJ() < crossQuotaBean.getQuotaPreBean().getKdjBean().getJ()+1
+								if ((crossQuotaBean.getQuotaPreBean().getRsiBean().getRsi1() < ratioBean.getRsiMid()
+										&& crossQuotaBean.getQuotaThrBean().getRsiBean().getRsi1() > ratioBean.getRsiMid())
+									&& crossQuotaBean.getQuotaPreBean().getKdjBean().getJ() < crossQuotaBean.getQuotaThrBean().getKdjBean().getJ()+1
 										) {
-									result = ConstantUtils.RSI_RETRACE_STATUS_BACK;
+//									result = ConstantUtils.RSI_RETRACE_STATUS_BACK;
+									volatileBean.setStatus(ConstantUtils.RSI_RETRACE_STATUS_BACK);
 								}
 							}
 						} else {
 					//	if (!retraceBean.isRetrace()) {
 							if ((crossQuotaBean.getQuotaBean().getRsiBean().getRsi1() > ratioBean.getRsiMid()
-									&& crossQuotaBean.getQuotaPreBean().getRsiBean().getRsi1() < ratioBean.getRsiMid())
+									&& crossQuotaBean.getQuotaPreBean().getRsiBean().getRsi1() > ratioBean.getRsiMid()
+									&& crossQuotaBean.getQuotaThrBean().getRsiBean().getRsi1() < ratioBean.getRsiMid())
 									&&
 									(crossQuotaBean.getQuotaBean().getKdjBean().getJ() > crossQuotaBean.getQuotaBean().getKdjBean().getK()
 											&& crossQuotaBean.getQuotaBean().getKdjBean().getK() > crossQuotaBean.getQuotaBean().getKdjBean().getD()
 											)
 									) {
-								result = ConstantUtils.RSI_RETRACE_STATUS_RETRACE;
+//								result = ConstantUtils.RSI_RETRACE_STATUS_RETRACE;
+								volatileBean.setStatus(ConstantUtils.RSI_RETRACE_STATUS_RETRACE);
 							}
 //						}
 						}
@@ -354,11 +396,15 @@ public class AnalysisServerImpl implements AnalysisServer {
 				}
 			}
 
-			if (crossQuotaBean.getQuotaBean().getRsiBean().getRsi1() < ratioBean.getRsiLow()) {
-				result = ConstantUtils.RSI_RETRACE_STATUS_NORMAL;
+			if (crossQuotaBean.getQuotaPreBean().getRsiBean().getRsi1() < ratioBean.getRsiLow()) {
+				if (crossQuotaBean.getQuotaPreBean().getRsiBean().getRsi1() < ratioBean.getRsiLow()-5
+						|| crossQuotaBean.getQuotaBean().getRsiBean().getRsi1() < ratioBean.getRsiLow()) {
+//					result = ConstantUtils.RSI_RETRACE_STATUS_NORMAL;
+					volatileBean.setStatus(ConstantUtils.RSI_RETRACE_STATUS_NORMAL);
+				}
 			}
 		}
-		return result;
+		return volatileBean;
 	}
 
 
@@ -555,8 +601,8 @@ public class AnalysisServerImpl implements AnalysisServer {
 		double price = 0;
 		double pricePre = 0;
 		double priceThr = 0;
-		double highPrice = 0;
-		double thrLowPrice = 0;
+		double maxHighPrice = 0;
+		double minLowPrice = 0;
 
 		for (MacdCross macdCross:crossList) {
 			if (macdCross.getSymbol().equals(symbol)) {
@@ -597,8 +643,8 @@ public class AnalysisServerImpl implements AnalysisServer {
 					price = macdCross.getPrice();
 					pricePre = macdCross.getPrePrice();
 					priceThr = macdCross.getThrPrice();
-					highPrice = macdCross.getHigh();
-					thrLowPrice = macdCross.getThrLow();
+					maxHighPrice = macdCross.getMaxHigh();
+					minLowPrice = macdCross.getMinLow();
 
 					priceBean.setClosePre(macdCross.getPrePrice());
 					continue;
@@ -763,8 +809,8 @@ public class AnalysisServerImpl implements AnalysisServer {
 		crossQuotaBean.setPrice(price);
 		crossQuotaBean.setPricePre(pricePre);
 		crossQuotaBean.setPriceThr(priceThr);
-		crossQuotaBean.setHighPrice(highPrice);
-		crossQuotaBean.setThrLowPrice(thrLowPrice);
+		crossQuotaBean.setMaxHighPrice(maxHighPrice);
+		crossQuotaBean.setMinLowPrice(minLowPrice);
 
 		return crossQuotaBean;
 	}

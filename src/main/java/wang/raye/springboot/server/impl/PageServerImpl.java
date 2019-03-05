@@ -168,6 +168,11 @@ public class PageServerImpl implements PageServer {
         List<Kline> stopLimitList = new ArrayList<>();
         List<Kline> retraceList = new ArrayList<>();
 
+        List<CrossQuotaBean> lowCrossQuotaList = new ArrayList<>();
+        List<CrossQuotaBean> highCrossQuotaList = new ArrayList<>();
+        List<CrossQuotaBean> stopLimitCrossQuotaList = new ArrayList<>();
+        List<CrossQuotaBean> retraceCrossQuotaList = new ArrayList<>();
+
         boolean isBuying = false;
 
         String preStatus = ConstantUtils.RSI_RETRACE_STATUS_NORMAL;
@@ -212,28 +217,33 @@ public class PageServerImpl implements PageServer {
 //                }
                 //=======================================
 
-                String newStatus = analysisServer.getRetraceByRSI(alertSettingList, crossQuotaBean, preStatus);
+                VolatileBean volatileBean = analysisServer.getRetraceByRSI(alertSettingList, crossQuotaBean, preStatus);
+                String newStatus = volatileBean.getStatus();
                 if (!newStatus.equals(preStatus)){
                     if (newStatus.equals(ConstantUtils.RSI_RETRACE_STATUS_LOW)) {
                         lowList.add(candlestickList.get(i));
+                        lowCrossQuotaList.add(crossQuotaBean);
                         isBuying = true;
                     }
                     if (newStatus.equals(ConstantUtils.RSI_RETRACE_STATUS_RETRACE)) {
                         retraceList.add(candlestickList.get(i));
+                        retraceCrossQuotaList.add(crossQuotaBean);
                         isBuying = true;
                     }
                 }
 
-                boolean isHigh = analysisServer.getHighByRSI(alertSettingList, crossQuotaBean);
-                if (isHigh) {
+                VolatileBean volatileHighBean = analysisServer.getHighByRSI(alertSettingList, crossQuotaBean);
+                if (null != volatileHighBean.getStatus()) {
                     highList.add(candlestickList.get(i));
+                    highCrossQuotaList.add(crossQuotaBean);
                     isBuying = false;
                 }
 
                 if (isBuying) {
-                    boolean isStopLimit = analysisServer.getStopLimitByRSI(alertSettingList, crossQuotaBean);
-                    if (isStopLimit) {
+                    VolatileBean volatileStopLimitBean = analysisServer.getStopLimitByRSI(alertSettingList, crossQuotaBean);
+                    if (null != volatileStopLimitBean.getStatus()) {
                         stopLimitList.add(candlestickList.get(i));
+                        stopLimitCrossQuotaList.add(crossQuotaBean);
                         isBuying = false;
                     }
                 }
@@ -246,6 +256,12 @@ public class PageServerImpl implements PageServer {
         pointListBean.setHighList(highList);
         pointListBean.setStopLimitList(stopLimitList);
         pointListBean.setRetraceList(retraceList);
+
+        pointListBean.setLowCrossQuotaList(lowCrossQuotaList);
+        pointListBean.setHighCrossQuotaList(highCrossQuotaList);
+        pointListBean.setStopLimitCrossQuotaList(stopLimitCrossQuotaList);
+        pointListBean.setRetraceCrossQuotaList(retraceCrossQuotaList);
+
         return  pointListBean;
     }
 

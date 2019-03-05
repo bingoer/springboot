@@ -261,8 +261,10 @@ public class QuotaCrossUtils {
 		return result;
 	}
 
-	public String getVolatile(List<Kline> candlestickList, List<AlertSetting> alertSettingList) {
-		String result = "";
+	public VolatileBean getVolatile(List<Kline> candlestickList, List<AlertSetting> alertSettingList) {
+        VolatileBean volatileBean = new VolatileBean();
+		String status = "";
+        double change = 0.0;
 		Kline lastCandle = candlestickList.get(candlestickList.size()-1);
 		Kline secondCandle = candlestickList.get(candlestickList.size()-2);
 		Kline thrCandle = candlestickList.get(candlestickList.size()-3);
@@ -275,18 +277,24 @@ public class QuotaCrossUtils {
 			if (difHigh >= upChange) {
 				double close = Math.max(lastCandle.getClose(), secondCandle.getClose());
 				if (thrCandle.getHigh() > close) {
-					result = "31";//反弹
+                    status = "31";//反弹
 				}else {
-					result = "13";//暴涨
+                    status = "13";//暴涨
 				}
 			}
+            change = difHigh;
 		} else {
-			double difLow = lastCandle.getLow() / secondCandle.getHigh() - 1;
+			double high = Math.max(lastCandle.getHigh(), secondCandle.getHigh());
+			double difLow = lastCandle.getLow() / high - 1;
 			if (difLow <= lowChange * -1) {
-				result = "23";//暴跌
+                status = "23";//暴跌
 			}
+            change = difLow;
 		}
-		return result;
+
+        volatileBean.setStatus(status);
+        volatileBean.setChange(change);
+		return volatileBean;
 	}
 
 	/**

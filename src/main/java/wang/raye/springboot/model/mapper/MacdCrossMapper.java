@@ -63,7 +63,7 @@ public interface MacdCrossMapper {
         "thr_quota2, thr_quota3, ",
         "thr_quota4, price, ",
         "pre_price, thr_price, ",
-        "thr_low, high, period, ",
+        "min_low, max_high, period, ",
         "kline_time, update_time)",
         "values (#{id,jdbcType=INTEGER}, #{exchange,jdbcType=VARCHAR}, ",
         "#{symbol,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}, ",
@@ -74,7 +74,7 @@ public interface MacdCrossMapper {
         "#{thrQuota2,jdbcType=DOUBLE}, #{thrQuota3,jdbcType=DOUBLE}, ",
         "#{thrQuota4,jdbcType=DOUBLE}, #{price,jdbcType=DOUBLE}, ",
         "#{prePrice,jdbcType=DOUBLE}, #{thrPrice,jdbcType=DOUBLE}, ",
-        "#{thrLow,jdbcType=DOUBLE}, #{high,jdbcType=DOUBLE}, #{period,jdbcType=VARCHAR}, ",
+        "#{minLow,jdbcType=DOUBLE}, #{maxHigh,jdbcType=DOUBLE}, #{period,jdbcType=VARCHAR}, ",
         "#{klineTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})"
     })
     int insert(MacdCross record);
@@ -116,8 +116,8 @@ public interface MacdCrossMapper {
         @Result(column="price", property="price", jdbcType=JdbcType.DOUBLE),
         @Result(column="pre_price", property="prePrice", jdbcType=JdbcType.DOUBLE),
         @Result(column="thr_price", property="thrPrice", jdbcType=JdbcType.DOUBLE),
-        @Result(column="thr_low", property="thrLow", jdbcType=JdbcType.DOUBLE),
-        @Result(column="high", property="high", jdbcType=JdbcType.DOUBLE),
+        @Result(column="min_low", property="minLow", jdbcType=JdbcType.DOUBLE),
+        @Result(column="max_high", property="maxHigh", jdbcType=JdbcType.DOUBLE),
         @Result(column="period", property="period", jdbcType=JdbcType.VARCHAR),
         @Result(column="kline_time", property="klineTime", jdbcType=JdbcType.VARCHAR),
         @Result(column="update_time", property="updateTime", jdbcType=JdbcType.TIMESTAMP)
@@ -134,7 +134,7 @@ public interface MacdCrossMapper {
         "select",
         "id, exchange, symbol, type, status, quota1, quota2, quota3, quota4, pre_quota1, ",
         "pre_quota2, pre_quota3, pre_quota4, thr_quota1, thr_quota2, thr_quota3, thr_quota4, ",
-        "price, pre_price, thr_price, thr_low, high, period, kline_time, update_time",
+        "price, pre_price, thr_price, min_low, max_high, period, kline_time, update_time",
         "from macd_cross",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -159,8 +159,8 @@ public interface MacdCrossMapper {
         @Result(column="price", property="price", jdbcType=JdbcType.DOUBLE),
         @Result(column="pre_price", property="prePrice", jdbcType=JdbcType.DOUBLE),
         @Result(column="thr_price", property="thrPrice", jdbcType=JdbcType.DOUBLE),
-        @Result(column="thr_low", property="thrLow", jdbcType=JdbcType.DOUBLE),
-        @Result(column="high", property="high", jdbcType=JdbcType.DOUBLE),
+        @Result(column="min_low", property="minLow", jdbcType=JdbcType.DOUBLE),
+        @Result(column="max_high", property="maxHigh", jdbcType=JdbcType.DOUBLE),
         @Result(column="period", property="period", jdbcType=JdbcType.VARCHAR),
         @Result(column="kline_time", property="klineTime", jdbcType=JdbcType.VARCHAR),
         @Result(column="update_time", property="updateTime", jdbcType=JdbcType.TIMESTAMP)
@@ -221,8 +221,8 @@ public interface MacdCrossMapper {
           "price = #{price,jdbcType=DOUBLE},",
           "pre_price = #{prePrice,jdbcType=DOUBLE},",
           "thr_price = #{thrPrice,jdbcType=DOUBLE},",
-          "thr_low = #{thrLow,jdbcType=DOUBLE},",
-          "high = #{high,jdbcType=DOUBLE},",
+          "min_low = #{minLow,jdbcType=DOUBLE},",
+          "max_high = #{maxHigh,jdbcType=DOUBLE},",
           "period = #{period,jdbcType=VARCHAR},",
           "kline_time = #{klineTime,jdbcType=VARCHAR},",
           "update_time = #{updateTime,jdbcType=TIMESTAMP}",

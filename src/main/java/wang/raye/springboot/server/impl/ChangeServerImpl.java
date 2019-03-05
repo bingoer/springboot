@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import wang.raye.springboot.bean.VolatileBean;
 import wang.raye.springboot.bean.WxSendBean;
 import wang.raye.springboot.model.AlertExchange;
 import wang.raye.springboot.model.AlertSetting;
@@ -157,13 +158,13 @@ public class ChangeServerImpl implements ChangeServer {
 		}
 
 		//判断是否爆涨还是暴跌
-		String status = quotaCrossUtils.getVolatile(candlestickList,alertSettingList);
+		VolatileBean volatileBean = quotaCrossUtils.getVolatile(candlestickList,alertSettingList);
 
-		if (!"".equals(status)) {
+		if (!"".equals(volatileBean.getStatus())) {
 			try {
 				// 涨跌幅微信提醒
-				this.sendAlert(alertExchangeList,alertWorkWxUsers, tickers, infoServer.getCoinInfo(blockccInfoClient,tickers.getCoinId()), period,lastCandle.getClose(), VOLATILE, status);
-				this.sendAlert2(alertUsers, tickers, infoServer.getCoinInfo(blockccInfoClient,tickers.getCoinId()), period,lastCandle.getClose(), VOLATILE, status);
+				this.sendAlert(alertExchangeList,alertWorkWxUsers, tickers, infoServer.getCoinInfo(blockccInfoClient,tickers.getCoinId()), period,lastCandle.getClose(), VOLATILE, volatileBean);
+				//this.sendAlert2(alertUsers, tickers, infoServer.getCoinInfo(blockccInfoClient,tickers.getCoinId()), period,lastCandle.getClose(), VOLATILE, status);
 			} catch (Exception e) {
 				log.error("线程 发送涨跌幅提醒信息出错 :["+Thread.currentThread().getName()+"]marketName：" +tickers.getExchangeName()+ ",symbol:" +tickers.getDisplayPairName());
 				log.error(e.getMessage(),e);
@@ -200,7 +201,7 @@ public class ChangeServerImpl implements ChangeServer {
 	/**
 	 * 涨跌幅微信提醒
 	 */
-	private void sendAlert(List<AlertExchange> alertExchangeList,List<AlertUser> alertUsers, Tickers tickers, CoinInfo coinInfo, CommonInterval period,double price, String type, String status){
+	private void sendAlert(List<AlertExchange> alertExchangeList,List<AlertUser> alertUsers, Tickers tickers, CoinInfo coinInfo, CommonInterval period,double price, String type, VolatileBean volatileBean){
 		String mobile = "";
 		for (int i = 0; i < alertUsers.size(); i++) {
 			if (i == 0) {
@@ -211,7 +212,7 @@ public class ChangeServerImpl implements ChangeServer {
 		}
 
 		String now = DateUtils.getToday();
-        String title = "【"+tickers.getDisplayPairName()+"】价格["+price+"]｜"+ParseUtils.parseCrossStatus(status)+ "｜"+ParseUtils.normalDecimalFormat(coinInfo.getChange1h()) + "%｜"+period.getIntervalId()+"｜"+ParseUtils.parseCrossType(type);
+        String title = "【"+tickers.getDisplayPairName()+"】价格["+price+"]｜"+ParseUtils.parseCrossStatus(volatileBean.getStatus())+ "｜"+ParseUtils.normalDecimalFormat(volatileBean.getChange()*100) + "%｜"+period.getIntervalId()+"｜"+ParseUtils.parseCrossType(type);
 
 		StringBuffer desp = new StringBuffer();
 		desp.append("<div class=\\\"gray\\\">"+now+"</div> <div class=\\\"normal\\\">");

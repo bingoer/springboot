@@ -65,14 +65,14 @@ public class CrossServerImpl implements CrossServer {
 	private String VR="VR";
 	private String DMI="DMI";
     private String SAR="SAR";
-	private String TYPE_BUY="BUY";
-	private String TYPE_SELL="SELL";
-    private String TYPE_LOW="LOW";
-    private String TYPE_HIGH="HIGH";
-    private String TYPE_STOP="STOP";
-    private String STATUS_LOW="11";
-    private String STATUS_HIGH="21";
-    private String STATUS_STOP="30";
+//	private String TYPE_BUY="BUY";
+//	private String TYPE_SELL="SELL";
+//    private String TYPE_LOW="LOW";
+//    private String TYPE_HIGH="HIGH";
+//    private String TYPE_STOP="STOP";
+//    private String STATUS_LOW="11";
+//    private String STATUS_HIGH="21";
+//    private String STATUS_STOP="30";
 	private String GOLDEN_CROSS="2";
 	private String Negative_Divergence="9";
 	private String DEATH_CROSS="4";
@@ -291,8 +291,12 @@ public class CrossServerImpl implements CrossServer {
 								mapperServer.addAnalysisHistory(exchange, symbol, period.getIntervalId(), DEATH_CROSS, price,klineTime);
 
 								CoinInfo coinInfo = infoServer.getCoinInfo(blockccInfoClient,tickers.getCoinId());
-								this.sendCross(alertExchangeList,alertWorkWxUsers, tickers, coinInfo, period,price, TYPE_SELL, status);
-								this.sendCross2(alertUsers, tickers, coinInfo, period,price,TYPE_SELL,status);
+								VolatileBean volatileBean = new VolatileBean();
+								volatileBean.setType(ConstantUtils.ANALYSIS_TYPE_SELL);
+								volatileBean.setStatus(status);
+								volatileBean.setChange(0.0);
+								this.sendCross(alertExchangeList,alertWorkWxUsers, tickers, coinInfo, period,price, volatileBean);
+								this.sendCross2(alertUsers, tickers, coinInfo, period,price,ConstantUtils.ANALYSIS_TYPE_SELL,status);
 							}
 						} else {
 							QuotaBean quotaBean = new QuotaBean();
@@ -327,8 +331,12 @@ public class CrossServerImpl implements CrossServer {
 
 
 								CoinInfo coinInfo = infoServer.getCoinInfo(blockccInfoClient,tickers.getCoinId());
-								this.sendCross(alertExchangeList,alertWorkWxUsers, tickers, coinInfo, period,price, TYPE_BUY, GOLDEN_CROSS);
-								this.sendCross2(alertUsers, tickers, coinInfo, period,price,TYPE_BUY,GOLDEN_CROSS);
+								VolatileBean volatileBean = new VolatileBean();
+								volatileBean.setType(ConstantUtils.ANALYSIS_TYPE_BUY);
+								volatileBean.setStatus(GOLDEN_CROSS);
+								volatileBean.setChange(0.0);
+								this.sendCross(alertExchangeList,alertWorkWxUsers, tickers, coinInfo, period,price, volatileBean);
+								this.sendCross2(alertUsers, tickers, coinInfo, period,price,ConstantUtils.ANALYSIS_TYPE_BUY,GOLDEN_CROSS);
 							}
 						}
 					} else {
@@ -373,15 +381,19 @@ public class CrossServerImpl implements CrossServer {
 						Analysis analysis = analysisExistList.get(0);
 						if (analysis.getStatus().equals(DOJI_UP)) {
 							String status = DOJI_DOWN;
-							boolean isCrossSell = analysisServer.getDojiSell(alertSettingList, crossQuotaBean.getQuotaBean(), analysis.getPrice(),crossQuotaBean.getPrice(),crossQuotaBean.getHighPrice());
+							boolean isCrossSell = analysisServer.getDojiSell(alertSettingList, crossQuotaBean.getQuotaBean(), analysis.getPrice(),crossQuotaBean.getPrice(),crossQuotaBean.getMaxHighPrice());
 							if (isCrossSell) {
 								mapperServer.modAnalysis(analysisExistList, status, crossQuotaBean.getPrice(),crossQuotaBean.getKlineTime());
 								mapperServer.addAnalysisHistory(exchange, symbol, period.getIntervalId(), status, crossQuotaBean.getPrice(),crossQuotaBean.getKlineTime());
 
 
 								CoinInfo coinInfo = infoServer.getCoinInfo(blockccInfoClient,tickers.getCoinId());
-								this.sendCross(alertExchangeList,alertWorkWxUsers, tickers, coinInfo, period,crossQuotaBean.getPrice(), TYPE_SELL, status);
-								this.sendCross2(alertUsers, tickers, coinInfo, period,crossQuotaBean.getPrice(),TYPE_SELL,status);
+								VolatileBean volatileBean = new VolatileBean();
+								volatileBean.setType(ConstantUtils.ANALYSIS_TYPE_SELL);
+								volatileBean.setStatus(status);
+								volatileBean.setChange(0.0);
+								this.sendCross(alertExchangeList,alertWorkWxUsers, tickers, coinInfo, period,crossQuotaBean.getPrice(), volatileBean);
+								this.sendCross2(alertUsers, tickers, coinInfo, period,crossQuotaBean.getPrice(),ConstantUtils.ANALYSIS_TYPE_SELL,status);
 							}
 						} else {
 
@@ -393,13 +405,17 @@ public class CrossServerImpl implements CrossServer {
 
 							boolean isCross = analysisServer.getDoji(alertSettingList, crossQuotaBean.getQuotaPreBean(), crossQuotaBean.getPriceThr(), crossQuotaBean.getPricePre());
 							if (isCross) {
-								mapperServer.modAnalysis(analysisExistList, status, crossQuotaBean.getThrLowPrice(),crossQuotaBean.getKlineTime());
-								mapperServer.addAnalysisHistory(exchange, symbol, period.getIntervalId(), status, crossQuotaBean.getThrLowPrice(),crossQuotaBean.getKlineTime());
+								mapperServer.modAnalysis(analysisExistList, status, crossQuotaBean.getMinLowPrice(),crossQuotaBean.getKlineTime());
+								mapperServer.addAnalysisHistory(exchange, symbol, period.getIntervalId(), status, crossQuotaBean.getMinLowPrice(),crossQuotaBean.getKlineTime());
 
 
 								CoinInfo coinInfo = infoServer.getCoinInfo(blockccInfoClient,tickers.getCoinId());
-								this.sendCross(alertExchangeList,alertWorkWxUsers, tickers, coinInfo, period,crossQuotaBean.getThrLowPrice(), TYPE_BUY, status);
-								this.sendCross2(alertUsers, tickers, coinInfo, period,crossQuotaBean.getThrLowPrice(),TYPE_BUY,status);
+								VolatileBean volatileBean = new VolatileBean();
+								volatileBean.setType(ConstantUtils.ANALYSIS_TYPE_BUY);
+								volatileBean.setStatus(status);
+								volatileBean.setChange(0.0);
+								this.sendCross(alertExchangeList,alertWorkWxUsers, tickers, coinInfo, period,crossQuotaBean.getMinLowPrice(), volatileBean);
+								this.sendCross2(alertUsers, tickers, coinInfo, period,crossQuotaBean.getMinLowPrice(),ConstantUtils.ANALYSIS_TYPE_BUY,status);
 							}
 						}
 					} else {
@@ -442,39 +458,29 @@ public class CrossServerImpl implements CrossServer {
                     if (null != analysisExistList && analysisExistList.size() > 0) {
                         Analysis analysis = analysisExistList.get(0);
 
-                        String status = null;
-                        String type = null;
+//                        String status = null;
+//                        String type = null;
 
-                        boolean isLow = analysisServer.getLowByRSI(alertSettingList, crossQuotaBean);
-                        if (isLow) {
-                            type = TYPE_LOW;
-                            status = STATUS_LOW;
-                        } else {
-                            boolean isHigh = analysisServer.getHighByRSI(alertSettingList, crossQuotaBean);
-                            if (isHigh) {
-                                type = TYPE_HIGH;
-                                status = STATUS_HIGH;
-                            } else {
-                                if (analysis.getStatus().equals(STATUS_LOW)) {
-                                    boolean isStopLimit = analysisServer.getStopLimitByRSI(alertSettingList, crossQuotaBean);
-                                    if (isStopLimit) {
-                                        type = TYPE_STOP;
-                                        status = STATUS_STOP;
-                                    }
+						VolatileBean volatileBean = analysisServer.getLowByRSI(alertSettingList, crossQuotaBean);
+                        if (null == volatileBean.getStatus()) {
+							volatileBean = analysisServer.getHighByRSI(alertSettingList, crossQuotaBean);
+                            if (null == volatileBean.getStatus()) {
+                                if (analysis.getStatus().equals(ConstantUtils.ANALYSIS_STATUS_LOW)) {
+									volatileBean = analysisServer.getStopLimitByRSI(alertSettingList, crossQuotaBean);
                                 }
                             }
                         }
 
-                        if (null != status && !analysis.getStatus().equals(status)) {
-                            mapperServer.modAnalysis(analysisExistList, status, price,klineTime);
-                            mapperServer.addAnalysisHistory(exchange, symbol, period.getIntervalId(), status, price,klineTime);
+                        if (null != volatileBean.getStatus() && !analysis.getStatus().equals(volatileBean.getStatus())) {
+                            mapperServer.modAnalysis(analysisExistList, volatileBean.getStatus(), price,klineTime);
+                            mapperServer.addAnalysisHistory(exchange, symbol, period.getIntervalId(), volatileBean.getStatus(), price,klineTime);
 
                             CoinInfo coinInfo = infoServer.getCoinInfo(blockccInfoClient,tickers.getCoinId());
-                            this.sendCross(alertExchangeList,alertWorkWxUsers, tickers, coinInfo, period, price, type, status);
+                            this.sendCross(alertExchangeList,alertWorkWxUsers, tickers, coinInfo, period, price, volatileBean);
 //                            this.sendCross2(alertUsers, tickers, coinInfo, period,price,TYPE_SELL,status);
                         }
                     } else {
-                        mapperServer.addAnalysis(exchange, symbol, period.getIntervalId(), STATUS_STOP, price,klineTime);
+                        mapperServer.addAnalysis(exchange, symbol, period.getIntervalId(), ConstantUtils.ANALYSIS_STATUS_STOP, price,klineTime);
                     }
                 }
             }
@@ -523,25 +529,24 @@ public class CrossServerImpl implements CrossServer {
 							preStatus = crossRsiList.get(0).getStatus();
 						}
 
-						String newStatus = analysisServer.getRetraceByRSI(alertSettingList, crossQuotaBean, preStatus);
+						VolatileBean volatileBean = analysisServer.getRetraceByRSI(alertSettingList, crossQuotaBean, preStatus);
+						String newStatus = volatileBean.getStatus();
 						if (newStatus.equals(ConstantUtils.RSI_RETRACE_STATUS_LOW)
 								|| newStatus.equals(ConstantUtils.RSI_RETRACE_STATUS_RETRACE)) {
-							if (!newStatus.equals(preStatus)){
-								type = TYPE_LOW;
-								status = STATUS_LOW;
+							if (!volatileBean.getStatus().equals(preStatus)){
+//								type = TYPE_LOW;
+//								status = STATUS_LOW;
+								volatileBean.setStatus(ConstantUtils.ANALYSIS_STATUS_LOW);
 							}
 						} else {
-							boolean isHigh = analysisServer.getHighByRSI(alertSettingList, crossQuotaBean);
-							if (isHigh) {
-								type = TYPE_HIGH;
-								status = STATUS_HIGH;
-							} else {
-								if (analysis.getStatus().equals(STATUS_LOW)) {
-									boolean isStopLimit = analysisServer.getStopLimitByRSI(alertSettingList, crossQuotaBean);
-									if (isStopLimit) {
-										type = TYPE_STOP;
-										status = STATUS_STOP;
-									}
+							volatileBean = analysisServer.getHighByRSI(alertSettingList, crossQuotaBean);
+							if (null == volatileBean.getStatus()) {
+								if (analysis.getStatus().equals(ConstantUtils.ANALYSIS_STATUS_LOW)) {
+									volatileBean = analysisServer.getStopLimitByRSI(alertSettingList, crossQuotaBean);
+//									if (isStopLimit) {
+//										type = TYPE_STOP;
+//										status = STATUS_STOP;
+//									}
 								}
 							}
 						}
@@ -561,11 +566,11 @@ public class CrossServerImpl implements CrossServer {
 							mapperServer.addAnalysisHistory(exchange, symbol, period.getIntervalId(), status, price,klineTime);
 
 							CoinInfo coinInfo = infoServer.getCoinInfo(blockccInfoClient,tickers.getCoinId());
-							this.sendCross(alertExchangeList,alertWorkWxUsers, tickers, coinInfo, period, price, type, status);
+							this.sendCross(alertExchangeList,alertWorkWxUsers, tickers, coinInfo, period, price, volatileBean);
 //                            this.sendCross2(alertUsers, tickers, coinInfo, period,price,TYPE_SELL,status);
 						}
 					} else {
-						mapperServer.addAnalysis(exchange, symbol, period.getIntervalId(), STATUS_STOP, price,klineTime);
+						mapperServer.addAnalysis(exchange, symbol, period.getIntervalId(), ConstantUtils.ANALYSIS_STATUS_STOP, price,klineTime);
 					}
 				}
 			}
@@ -615,8 +620,8 @@ public class CrossServerImpl implements CrossServer {
 		double price = 0;
 		double pricePre = 0;
 		double priceThr = 0;
-		double highPrice = 0;
-		double thrLowPrice = 0;
+		double maxHighPrice = 0;
+		double minLowPrice = 0;
 
 		for (MacdCross macdCross:crossList) {
 			if (macdCross.getSymbol().equals(symbol)) {
@@ -657,8 +662,8 @@ public class CrossServerImpl implements CrossServer {
 					price = macdCross.getPrice();
 					pricePre = macdCross.getPrePrice();
 					priceThr = macdCross.getThrPrice();
-					highPrice = macdCross.getHigh();
-					thrLowPrice = macdCross.getThrLow();
+					maxHighPrice = macdCross.getMaxHigh();
+					minLowPrice = macdCross.getMinLow();
 
 					priceBean.setClosePre(macdCross.getPrePrice());
 					continue;
@@ -823,8 +828,8 @@ public class CrossServerImpl implements CrossServer {
 		crossQuotaBean.setPrice(price);
 		crossQuotaBean.setPricePre(pricePre);
 		crossQuotaBean.setPriceThr(priceThr);
-		crossQuotaBean.setHighPrice(highPrice);
-		crossQuotaBean.setThrLowPrice(thrLowPrice);
+		crossQuotaBean.setMaxHighPrice(maxHighPrice);
+		crossQuotaBean.setMinLowPrice(minLowPrice);
 
 		return crossQuotaBean;
 	}
@@ -1017,8 +1022,10 @@ public class CrossServerImpl implements CrossServer {
 				macdCross.setPrice(candlestickList.get(candlestickList.size()-1).getClose());
 				macdCross.setPrePrice(candlestickList.get(candlestickList.size()-2).getClose());
 				macdCross.setThrPrice(candlestickList.get(candlestickList.size()-3).getClose());
-				macdCross.setThrLow(candlestickList.get(candlestickList.size()-3).getLow());
-				macdCross.setHigh(candlestickList.get(candlestickList.size()-1).getHigh());
+//				macdCross.setThrLow(candlestickList.get(candlestickList.size()-3).getLow());
+//				macdCross.setHigh(candlestickList.get(candlestickList.size()-1).getHigh());
+				macdCross.setMinLow(ParseUtils.getMinLowPriceByLastCandles(candlestickList,3));
+				macdCross.setMaxHigh(ParseUtils.getMaxHighPriceByLastCandles(candlestickList, 3));
 				macdCross.setKlineTime(DateUtils.format(candlestickList.get(candlestickList.size()-1).getTime()));
 				macdCross.setUpdateTime(new Date());
 				if(!((existList.get(0).getStatus().equals("2") && status.equals("2"))
@@ -1048,8 +1055,10 @@ public class CrossServerImpl implements CrossServer {
 				macdCross.setPrice(candlestickList.get(candlestickList.size()-1).getClose());
 				macdCross.setPrePrice(candlestickList.get(candlestickList.size()-2).getClose());
 				macdCross.setThrPrice(candlestickList.get(candlestickList.size()-3).getClose());
-				macdCross.setThrLow(candlestickList.get(candlestickList.size()-3).getLow());
-				macdCross.setHigh(candlestickList.get(candlestickList.size()-1).getHigh());
+//				macdCross.setThrLow(candlestickList.get(candlestickList.size()-3).getLow());
+//				macdCross.setHigh(candlestickList.get(candlestickList.size()-1).getHigh());
+				macdCross.setMinLow(ParseUtils.getMinLowPriceByLastCandles(candlestickList,3));
+				macdCross.setMaxHigh(ParseUtils.getMaxHighPriceByLastCandles(candlestickList, 3));
 				macdCross.setKlineTime(DateUtils.format(candlestickList.get(candlestickList.size()-1).getTime()));
 				macdCross.setUpdateTime(new Date());
 				mapperServer.addMacdCross(macdCross);
@@ -1076,7 +1085,7 @@ public class CrossServerImpl implements CrossServer {
 	/**
 	 * 指标交叉微信提醒
 	 */
-	private void sendCross(List<AlertExchange> alertExchangeList,List<AlertUser> alertUsers, Tickers tickers, CoinInfo coinInfo, CommonInterval period,double price, String type, String status){
+	private void sendCross(List<AlertExchange> alertExchangeList,List<AlertUser> alertUsers, Tickers tickers, CoinInfo coinInfo, CommonInterval period,double price, VolatileBean volatileBean){
 
 		try {
 		String mobile = "";
@@ -1089,7 +1098,7 @@ public class CrossServerImpl implements CrossServer {
 		}
 
 		String now = DateUtils.getToday();
-		String title = "【"+tickers.getDisplayPairName()+"】价格["+price+"]｜"+ParseUtils.parseCrossStatus(status)+ "｜"+ParseUtils.normalDecimalFormat(coinInfo.getChange1h()) + "%｜"+period.getIntervalId()+"｜"+ParseUtils.parseCrossType(type);
+		String title = "【"+tickers.getDisplayPairName()+"】价格["+price+"]｜"+ParseUtils.parseCrossStatus(volatileBean.getStatus())+"｜最值:"+volatileBean.getMaxPrice()+ "｜"+ParseUtils.normalDecimalFormat(volatileBean.getChange()) + "%｜"+period.getIntervalId()+"｜"+ParseUtils.parseCrossType(volatileBean.getType());
 
 		StringBuffer desp = new StringBuffer();
 		desp.append("<div class=\\\"gray\\\">"+now+"</div> <div class=\\\"normal\\\">");
@@ -1107,7 +1116,7 @@ public class CrossServerImpl implements CrossServer {
 		String url=ParseUtils.parseAlertUrl(alertExchangeList,tickers.getExchangeName(),tickers.getDisplayPairName());
 		String secretId = WxSendMessageUtil.SECRETID_BINANCE_BUY;
 		String agentId = WxSendMessageUtil.AGENTID_BINANCE_BUY;
-		if (type.equals(TYPE_BUY)) {
+		if (ConstantUtils.ANALYSIS_TYPE_BUY.equals(volatileBean.getType())) {
 			if ("huobipro".equals(tickers.getExchangeName()) || "hadax".equals(tickers.getExchangeName())) {
 				secretId = WxSendMessageUtil.SECRETID_HUOBI_BUY;
 				agentId = WxSendMessageUtil.AGENTID_HUOBI_BUY;
@@ -1121,7 +1130,7 @@ public class CrossServerImpl implements CrossServer {
 				secretId = WxSendMessageUtil.SECRETID_OKEX_BUY;
 				agentId = WxSendMessageUtil.AGENTID_OKEX_BUY;
 			}
-		} else if (type.equals(TYPE_SELL)){
+		} else if (ConstantUtils.ANALYSIS_TYPE_SELL.equals(volatileBean.getType())){
 			if ("binance".equals(tickers.getExchangeName())) {
 				secretId = WxSendMessageUtil.SECRETID_BINANCE_SELL;
 				agentId = WxSendMessageUtil.AGENTID_BINANCE_SELL;
@@ -1138,7 +1147,7 @@ public class CrossServerImpl implements CrossServer {
 				secretId = WxSendMessageUtil.SECRETID_OKEX_SELL;
 				agentId = WxSendMessageUtil.AGENTID_OKEX_SELL;
 			}
-		} else if (type.equals(TYPE_LOW)){
+		} else if (ConstantUtils.ANALYSIS_TYPE_LOW.equals(volatileBean.getType())){
             if ("binance".equals(tickers.getExchangeName())) {
                 secretId = WxSendMessageUtil.SECRETID_BINANCE_LOW;
                 agentId = WxSendMessageUtil.AGENTID_BINANCE_LOW;
@@ -1155,7 +1164,7 @@ public class CrossServerImpl implements CrossServer {
                 secretId = WxSendMessageUtil.SECRETID_OKEX_BUY;
                 agentId = WxSendMessageUtil.AGENTID_OKEX_BUY;
             }
-        } else if (type.equals(TYPE_HIGH)){
+        } else if (ConstantUtils.ANALYSIS_TYPE_HIGH.equals(volatileBean.getType())){
             if ("binance".equals(tickers.getExchangeName())) {
                 secretId = WxSendMessageUtil.SECRETID_BINANCE_HIGH;
                 agentId = WxSendMessageUtil.AGENTID_BINANCE_HIGH;
@@ -1172,7 +1181,7 @@ public class CrossServerImpl implements CrossServer {
                 secretId = WxSendMessageUtil.SECRETID_OKEX_SELL;
                 agentId = WxSendMessageUtil.AGENTID_OKEX_SELL;
             }
-        } else if (type.equals(TYPE_STOP)){
+        } else if (ConstantUtils.ANALYSIS_TYPE_STOP.equals(volatileBean.getType())){
             if ("binance".equals(tickers.getExchangeName())) {
                 secretId = WxSendMessageUtil.SECRETID_BINANCE_STOP;
                 agentId = WxSendMessageUtil.AGENTID_BINANCE_STOP;

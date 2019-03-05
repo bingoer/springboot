@@ -3,6 +3,7 @@ package wang.raye.springboot.server;
 import wang.raye.springboot.bean.CrossQuotaBean;
 import wang.raye.springboot.bean.QuotaBean;
 import wang.raye.springboot.bean.RetraceBean;
+import wang.raye.springboot.bean.VolatileBean;
 import wang.raye.springboot.model.AlertSetting;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public interface AnalysisServer {
 	 * @param crossQuotaBean
 	 * @return
 	 */
-	public boolean getLowByRSI(List<AlertSetting> alertSettingList, CrossQuotaBean crossQuotaBean);
+	public VolatileBean getLowByRSI(List<AlertSetting> alertSettingList, CrossQuotaBean crossQuotaBean);
 
 	/**
 	 * 分析rsi指标得出高点
@@ -28,7 +29,7 @@ public interface AnalysisServer {
 	 * @param crossQuotaBean
 	 * @return
 	 */
-	public boolean getHighByRSI(List<AlertSetting> alertSettingList, CrossQuotaBean crossQuotaBean);
+	public VolatileBean getHighByRSI(List<AlertSetting> alertSettingList, CrossQuotaBean crossQuotaBean);
 
 	/**
 	 * 分析rsi指标得出 在低点买入后的止盈止损点
@@ -36,7 +37,7 @@ public interface AnalysisServer {
 	 * @param crossQuotaBean
 	 * @return
 	 */
-	public boolean getStopLimitByRSI(List<AlertSetting> alertSettingList, CrossQuotaBean crossQuotaBean);
+	public VolatileBean getStopLimitByRSI(List<AlertSetting> alertSettingList, CrossQuotaBean crossQuotaBean);
 
 	/**
 	 * 分析rsi指标得出 双底后的买入点
@@ -52,7 +53,7 @@ public interface AnalysisServer {
 	 * @param crossQuotaBean
 	 * @return
 	 */
-	public String getRetraceByRSI(List<AlertSetting> alertSettingList, CrossQuotaBean crossQuotaBean, String preStatus);
+	public VolatileBean getRetraceByRSI(List<AlertSetting> alertSettingList, CrossQuotaBean crossQuotaBean, String preStatus);
 
 	public boolean getCross(List<AlertSetting> alertSettingList, QuotaBean quotaBean, double price);
 

@@ -126,12 +126,12 @@ public class MacdCrossSqlProvider {
             sql.VALUES("thr_price", "#{thrPrice,jdbcType=DOUBLE}");
         }
         
-        if (record.getThrLow() != null) {
-            sql.VALUES("thr_low", "#{thrLow,jdbcType=DOUBLE}");
+        if (record.getMinLow() != null) {
+            sql.VALUES("min_low", "#{minLow,jdbcType=DOUBLE}");
         }
         
-        if (record.getHigh() != null) {
-            sql.VALUES("high", "#{high,jdbcType=DOUBLE}");
+        if (record.getMaxHigh() != null) {
+            sql.VALUES("max_high", "#{maxHigh,jdbcType=DOUBLE}");
         }
         
         if (record.getPeriod() != null) {
@@ -181,8 +181,8 @@ public class MacdCrossSqlProvider {
         sql.SELECT("price");
         sql.SELECT("pre_price");
         sql.SELECT("thr_price");
-        sql.SELECT("thr_low");
-        sql.SELECT("high");
+        sql.SELECT("min_low");
+        sql.SELECT("max_high");
         sql.SELECT("period");
         sql.SELECT("kline_time");
         sql.SELECT("update_time");
@@ -289,12 +289,12 @@ public class MacdCrossSqlProvider {
             sql.SET("thr_price = #{record.thrPrice,jdbcType=DOUBLE}");
         }
         
-        if (record.getThrLow() != null) {
-            sql.SET("thr_low = #{record.thrLow,jdbcType=DOUBLE}");
+        if (record.getMinLow() != null) {
+            sql.SET("min_low = #{record.minLow,jdbcType=DOUBLE}");
         }
         
-        if (record.getHigh() != null) {
-            sql.SET("high = #{record.high,jdbcType=DOUBLE}");
+        if (record.getMaxHigh() != null) {
+            sql.SET("max_high = #{record.maxHigh,jdbcType=DOUBLE}");
         }
         
         if (record.getPeriod() != null) {
@@ -343,8 +343,8 @@ public class MacdCrossSqlProvider {
         sql.SET("price = #{record.price,jdbcType=DOUBLE}");
         sql.SET("pre_price = #{record.prePrice,jdbcType=DOUBLE}");
         sql.SET("thr_price = #{record.thrPrice,jdbcType=DOUBLE}");
-        sql.SET("thr_low = #{record.thrLow,jdbcType=DOUBLE}");
-        sql.SET("high = #{record.high,jdbcType=DOUBLE}");
+        sql.SET("min_low = #{record.minLow,jdbcType=DOUBLE}");
+        sql.SET("max_high = #{record.maxHigh,jdbcType=DOUBLE}");
         sql.SET("period = #{record.period,jdbcType=VARCHAR}");
         sql.SET("kline_time = #{record.klineTime,jdbcType=VARCHAR}");
         sql.SET("update_time = #{record.updateTime,jdbcType=TIMESTAMP}");
@@ -440,12 +440,12 @@ public class MacdCrossSqlProvider {
             sql.SET("thr_price = #{thrPrice,jdbcType=DOUBLE}");
         }
         
-        if (record.getThrLow() != null) {
-            sql.SET("thr_low = #{thrLow,jdbcType=DOUBLE}");
+        if (record.getMinLow() != null) {
+            sql.SET("min_low = #{minLow,jdbcType=DOUBLE}");
         }
         
-        if (record.getHigh() != null) {
-            sql.SET("high = #{high,jdbcType=DOUBLE}");
+        if (record.getMaxHigh() != null) {
+            sql.SET("max_high = #{maxHigh,jdbcType=DOUBLE}");
         }
         
         if (record.getPeriod() != null) {
